@@ -23,5 +23,5 @@ def start_func():
 
 
 #Als Hauptprogramm ausführen
-if _name_ == '_main_':
+if __name__ == '_main_':
     start_func()
