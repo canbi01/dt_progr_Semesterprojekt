@@ -4,7 +4,7 @@ import Helpers.Data_Helpers as hlp
 
 #Globale Variablen - Listen
 
-conf_lst = []
+column_lst = []
 
 #Generate Filter Form
 
