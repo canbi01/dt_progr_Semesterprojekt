@@ -17,7 +17,13 @@ columns = acc.GetElementsByType("Column")
 # Ausgabe der Anzahl der gefundenen Säulen
 print(f"Number of Columns: {len(columns)}")
 
+
+
 # Optional: Details zu den Säulen ausgeben
+"""
 for column in columns:
     print(f"Column ID: {column.elementId}")
+"""
 
+for colum in columns:
+    print(f"die ELement-ID ist {columns.IFCLabel}")
