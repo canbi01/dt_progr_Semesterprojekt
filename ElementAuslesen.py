@@ -1,3 +1,5 @@
+# ********* DIESES SCRIPT KANN ELEMENTE FILTRERN UND AUSLESEN *********
+
 from archicad import ACConnection
 
 # Verbindung zu Archicad herstellen
