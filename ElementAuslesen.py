@@ -25,5 +25,14 @@ for column in columns:
     print(f"Column ID: {column.elementId}")
 """
 
+# ********* vo dene da une funktioniert au keine *********
+"""
+print(columns.attribut)
+
 for colum in columns:
     print(f"die ELement-ID ist {columns.IFCLabel}")
+
+
+stützen = act.GetElementClassifications("Baugespann")
+print(f"id-hint: {stützen}")
+"""
