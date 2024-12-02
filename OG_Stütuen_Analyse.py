@@ -1,4 +1,5 @@
 from archicad import ACConnection
+import xlsxwriter
 
 # Verbindung zu Archicad herstellen
 conn = ACConnection.connect()
@@ -57,6 +58,7 @@ workbook.close()
 
 # Gesamtergebnis ausgeben
 print(f"Excel-Liste 'Stuetzen_Liste.xlsx' wurde erfolgreich erstellt.")
+
 
 
 
