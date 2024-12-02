@@ -14,13 +14,19 @@ conn = ACConnection.connect()
 assert conn, "Keine Verbindung zu ARCHICAD möglich. Bitte sicherstellen, dass ARCHICAD läuft."
 
 
-import Prozessor.Stützen_Analyse
+# Test_main.py
 
+# Die Datei archicad_export importieren
+from Test_WIB import export_stuetzen_liste
+
+# Eine beliebige Main-Funktion oder Logik, um das Skript zu starten
+def main():
+    # Stützenliste exportieren
+    export_stuetzen_liste()
+
+# Main aufrufen
 if __name__ == "__main__":
-    try:
-        subprocess.run(["python", "export_stuetzen.py"], check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Fehler bei der Ausführung: {e}")
+    main()
 
 
 
