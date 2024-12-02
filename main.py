@@ -2,7 +2,6 @@
 from archicad import ACConnection
 from typing import List, Tuple, Iterable
 
-
 # Interface
 import Prozessor.interface_final as inter
 

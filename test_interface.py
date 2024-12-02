@@ -1,10 +1,9 @@
 import customtkinter as ctk
-from tkinter import messagebox, filedialog, simpledialog
+from tkinter import messagebox, filedialog, simpledialog, ttk
 import os
 import subprocess
 
 # Funktionen und GUI
-
 def start_app():
     # Hauptfenster erstellen
     ctk.set_appearance_mode("Dark")  # Dark mode für modernes Aussehen
@@ -51,16 +50,17 @@ def start_app():
         button_projekt_auswahl = ctk.CTkButton(frame_main, text="Projekt auswählen oder erstellen", command=projekt_auswaehlen_oder_erstellen)
         button_projekt_auswahl.pack(pady=10)
 
+        
+
         # Rechte Spalte für Hinweise und To-Do-Anweisungen
         label_todo_title = ctk.CTkLabel(frame_right, text="Was zu tun ist", font=("Arial", 18))
         label_todo_title.pack(pady=10)
 
         label_todo_content = ctk.CTkLabel(
             frame_right,
-            text="1. Melden Sie sich an, um fortzufahren.\n"
-                 "2. Klicken Sie auf 'Projekt auswählen oder erstellen', um ein Projekt zu starten oder zu öffnen.\n"
-                 "3. Wählen Sie den Speicherort für das Projekt.\n"
-                 "4. Öffnen Sie Archicad-Dateien zur weiteren Bearbeitung.",
+            text="1. Wählen Sie ein Projekt aus oder erstellen Sie ein neues.\n"
+                 "2. Nutzen Sie die Menüoptionen zur Projektverwaltung.\n"
+                 "3. Öffnen Sie Archicad-Dateien zur weiteren Bearbeitung.",
             font=("Arial", 14),
             justify="left",
             wraplength=280
@@ -101,6 +101,9 @@ def start_app():
             neue_projekt_oberflaeche(projekt_pfad)
 
     def neue_projekt_oberflaeche(ordner):
+        for widget in root.winfo_children():
+            widget.destroy()
+        
         frame_main = ctk.CTkFrame(root)
         frame_main.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
 
@@ -117,14 +120,19 @@ def start_app():
         button_archicad_option = ctk.CTkButton(frame_main, text="Archicad-Optionen", command=lambda: archicad_optionen(ordner))
         button_archicad_option.pack(pady=10)
 
+        button_script_uebersicht = ctk.CTkButton(frame_main, text="Geöffnete VS Code Skripte anzeigen", command=zeige_script_uebersicht)
+        button_script_uebersicht.pack(pady=10)
+
+        
+
         # Rechte Spalte für Hinweise und To-Do-Anweisungen
-        label_todo_title = ctk.CTkLabel(frame_right, text="Was zu tun ist", font=("Arial", 18))
+        label_todo_title = ctk.CTkLabel(frame_right, text="Projektverwaltung", font=("Arial", 18))
         label_todo_title.pack(pady=10)
 
         label_todo_content = ctk.CTkLabel(
             frame_right,
-            text="1. Wählen Sie eine Archicad-Option.\n"
-                 "2. Nutzen Sie die Optionen im Menü, um das Projekt zu verwalten.",
+            text="1. Wählen Sie eine Archicad-Option aus.\n"
+                 "2. Nutzen Sie die verfügbaren Tools zur Verwaltung.",
             font=("Arial", 14),
             justify="left"
         )
@@ -144,8 +152,49 @@ def start_app():
                 subprocess.Popen([datei], shell=True)
                 archicad_datei_geoeffnet[0] = True  # Setze den Status auf "geöffnet"
                 messagebox.showinfo("Datei geöffnet", f"Die Datei '{os.path.basename(datei)}' wurde erfolgreich geöffnet.")
+                
+                # Schließe das Fenster der Projektverwaltung
+                root.destroy()
+
+                # Python-Palette nach Öffnen der Archicad-Datei anzeigen
+                zeige_python_palette()
             except Exception as e:
                 messagebox.showerror("Fehler", f"Fehler beim Öffnen der Datei: {str(e)}")
+
+    def zeige_python_palette():
+        # Neues Fenster öffnen, um auf das geöffnete Visual Studio Projekt zuzugreifen
+        palette_fenster = ctk.CTkToplevel()
+        palette_fenster.title("Python-Palette")
+        palette_fenster.geometry("600x400")
+
+        label_info = ctk.CTkLabel(palette_fenster, text="Hier können Sie auf das aktuell geöffnete Visual Studio Projekt zugreifen.", font=("Arial", 14))
+        label_info.pack(pady=20)
+
+        # Beispiel: Aktionen zur Integration mit Visual Studio könnten hier hinzugefügt werden
+        button_vs_aktion = ctk.CTkButton(palette_fenster, text="Aktion im Visual Studio ausführen", command=lambda: messagebox.showinfo("Info", "Diese Funktion wird bald verfügbar sein."))
+        button_vs_aktion.pack(pady=10)
+
+    def zeige_script_uebersicht():
+        # Neues Fenster öffnen, um eine Übersicht der geöffneten Skripte anzuzeigen
+        uebersicht_fenster = ctk.CTkToplevel()
+        uebersicht_fenster.title("Übersicht der geöffneten VS Code Skripte")
+        uebersicht_fenster.geometry("600x400")
+
+        label_info = ctk.CTkLabel(uebersicht_fenster, text="Geöffnete Skripte im VS Code:", font=("Arial", 14))
+        label_info.pack(pady=20)
+
+        # Hier sollten alle geöffneten Dateien in VS Code angezeigt werden
+        # Beispielhafte Liste von Skripten (kann durch tatsächliche Integration mit VS Code erweitert werden)
+        geoeffnete_skripte = [
+            "main.py",
+            "Stützen_Analyse.py",
+            "interface_final.py",
+            "test_interface.py"
+        ]
+
+        for skript in geoeffnete_skripte:
+            label_skript = ctk.CTkLabel(uebersicht_fenster, text=skript, font=("Arial", 12))
+            label_skript.pack(anchor="w", padx=20)
 
     # Widgets für Anmeldeoberfläche
     frame = ctk.CTkFrame(root)
