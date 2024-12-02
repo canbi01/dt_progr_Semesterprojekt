@@ -17,7 +17,7 @@ assert conn, "Keine Verbindung zu ARCHICAD möglich. Bitte sicherstellen, dass A
 # Test_main.py
 
 # Die Datei archicad_export importieren
-from Test_WIB import export_stuetzen_liste
+from Prozessor.Stützen_Analyse import export_stuetzen_liste
 
 # Eine beliebige Main-Funktion oder Logik, um das Skript zu starten
 def main():
