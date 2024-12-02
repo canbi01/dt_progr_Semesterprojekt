@@ -58,3 +58,7 @@ workbook.close()
 
 # Gesamtergebnis ausgeben
 print(f"Excel-Liste 'Stuetzen_Liste.xlsx' wurde erfolgreich erstellt.")
+
+# Nur ausführen, wenn das Skript direkt gestartet wird
+if __name__ == "__main__":
+    print("Das Skript wurde erfolgreich ausgeführt.") 
