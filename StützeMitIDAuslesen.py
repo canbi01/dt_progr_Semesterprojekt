@@ -1,3 +1,5 @@
+# ********* DIESES SCRIPT SOLLTE ELEMENTE AUF ELEMENT-ID (IFC-Eigenschaft Name (Attribut)) FILTRERN UND AUSLESEN *********
+
 from archicad import ACConnection
 
 # Verbindung zu Archicad herstellen
@@ -18,7 +20,7 @@ filtered_columns = []
 for column in columns:
     # Details zu den Eigenschaften des Elements abrufen 
     """
-    s problem isch die eigeschafts abruefe/de befehl wos defür het nöd(GetElementClassifications())
+    s problem isch die eigeschafts abruefe/de befehl wos defür brucht. nöd: (GetElementClassifications())
     """
     classification_info = acc.GetElementClassifications(column.elementId)
     

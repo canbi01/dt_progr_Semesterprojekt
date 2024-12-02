@@ -1,3 +1,5 @@
+# ********* DIESES SCRIPT KANN ELEMENTE FILTRERN UND AUSLESEN *********
+
 from archicad import ACConnection
 
 # Verbindung zu Archicad herstellen
@@ -15,7 +17,22 @@ columns = acc.GetElementsByType("Column")
 # Ausgabe der Anzahl der gefundenen Säulen
 print(f"Number of Columns: {len(columns)}")
 
+
+
 # Optional: Details zu den Säulen ausgeben
+"""
 for column in columns:
     print(f"Column ID: {column.elementId}")
+"""
 
+# ********* vo dene da une funktioniert au keine *********
+"""
+print(columns.attribut)
+
+for colum in columns:
+    print(f"die ELement-ID ist {columns.IFCLabel}")
+
+
+stützen = act.GetElementClassifications("Baugespann")
+print(f"id-hint: {stützen}")
+"""
