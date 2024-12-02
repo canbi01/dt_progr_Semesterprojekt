@@ -1,5 +1,6 @@
+import openpyxl
 from archicad import ACConnection
-import xlsxwriter
+import datetime
 
 # Verbindung zu Archicad herstellen
 conn = ACConnection.connect()
@@ -22,19 +23,22 @@ property_values = acc.GetPropertyValuesOfElements(columns, [element_id_property_
 # Bounding Boxes der Stützen abrufen
 bounding_boxes = acc.Get3DBoundingBoxes(columns)
 
-# Excel-Datei erstellen
-workbook = xlsxwriter.Workbook('Stuetzen_Liste.xlsx')
-worksheet = workbook.add_worksheet()
+# Projektinformationen aus Archicad abrufen
+project_info = acc.GetProjectInfo()
+project_name = project_info.get('ProjectName', 'Unbekanntes Projekt')
 
-# Kopfzeilen hinzufügen
-worksheet.write(0, 0, 'Element-ID')
-worksheet.write(0, 1, 'X-Koordinate')
-worksheet.write(0, 2, 'Y-Koordinate')
-worksheet.write(0, 3, 'MüM (Unterster Punkt)')
-worksheet.write(0, 4, 'Höhe der Stütze')
+# Vorhandene Excel-Datei laden
+template_path = 'Stuetzen_Vorlage.xlsx'
+wb = openpyxl.load_workbook(template_path)
+ws = wb.active
 
-# Daten der Stützen sammeln und in die Excel-Liste einfügen
-row = 1
+# Datum und Projektname in der Vorlage aktualisieren
+current_date = datetime.datetime.now().strftime('%d.%m.%Y')
+ws['B6'] = current_date
+ws['B7'] = project_name
+
+# Annahme: Die Vorlage hat Kopfzeilen ab Zeile 10 und Daten werden ab Zeile 11 eingefügt
+row = 11
 for prop, bounding_box in zip(property_values, bounding_boxes):
     if prop.propertyValues[0].propertyValue.value == "Baugespann":
         element_id = prop.propertyValues[0].propertyValue.value
@@ -45,20 +49,17 @@ for prop, bounding_box in zip(property_values, bounding_boxes):
         height = round(z_max - z_min, 2)
 
         # Daten in die Excel-Tabelle schreiben
-        worksheet.write(row, 0, element_id)
-        worksheet.write(row, 1, x_coord)
-        worksheet.write(row, 2, y_coord)
-        worksheet.write(row, 3, z_min)
-        worksheet.write(row, 4, height)
+        ws[f'A{row}'] = element_id
+        ws[f'B{row}'] = x_coord
+        ws[f'C{row}'] = y_coord
+        ws[f'D{row}'] = z_min
+        ws[f'E{row}'] = height
 
         row += 1
 
-# Excel-Datei speichern
-workbook.close()
+# Geänderte Excel-Datei speichern
+wb.save('Stuetzen_Ausschreibung.xlsx')
 
 # Gesamtergebnis ausgeben
-print(f"Excel-Liste 'Stuetzen_Liste.xlsx' wurde erfolgreich erstellt.")
-
-
-
+print(f"Excel-Liste 'Stuetzen_Ausschreibung.xlsx' wurde erfolgreich erstellt.")
 
