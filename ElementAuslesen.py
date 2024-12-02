@@ -14,8 +14,17 @@ acu = conn.utilities
 # Säulen (Stützen) auslesen
 columns = acc.GetElementsByType("Column")
 
-# Ausgabe der Anzahl der gefundenen Säulen
-print(f"Number of Columns: {len(columns)}")
+# Zähle die Anzahl der Säulen, die sich auf der Ebene "000-Baugespann" befinden
+count_columns_on_layer = 0
+for column in columns:
+    element_layer = acc.GetElementLayer(column.elementId)
+    if element_layer.name == "000-Baugespann":
+        count_columns_on_layer += 1
+
+# Ausgabe der Anzahl der gefundenen Säulen auf der angegebenen Ebene
+print(f"Number of Columns on Layer '000-Baugespann': {count_columns_on_layer}")
+
+
 
 
 
