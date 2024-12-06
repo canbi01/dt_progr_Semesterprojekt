@@ -88,4 +88,4 @@ def export_stuetzen_liste():
     # Gesamtergebnis ausgeben
     print(f"Excel-Liste 'Stuetzen_Liste.xlsx' und PDF 'Stuetzen_Liste.pdf' wurden erfolgreich erstellt.")
 
-export_stuetzen_liste()
+#export_stuetzen_liste()
