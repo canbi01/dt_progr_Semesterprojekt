@@ -3,7 +3,7 @@ from archicad import ACConnection
 from typing import List, Tuple, Iterable
 
 # Interface
-import Prozessor.interface_final as inter
+import Prozessor.test_interface as inter
 
 if __name__ == "__main__":
     inter.start_app()
@@ -27,6 +27,18 @@ def main():
 if __name__ == "__main__":
     main()
 
+# Stütze Analyse PDF
+
+from Prozessor.Stützen_AnalysePDF import export_stuetzen_liste
+
+# Eine beliebige Main-Funktion oder Logik, um das Skript zu starten
+def main():
+    # Stützenliste exportieren
+    export_stuetzen_liste()
+
+# Main aufrufen
+if __name__ == "__main__":
+    main()
 
 
 
