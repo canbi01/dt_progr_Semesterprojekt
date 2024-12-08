@@ -12,30 +12,9 @@ if __name__ == "__main__":
 conn = ACConnection.connect()
 assert conn, "Keine Verbindung zu ARCHICAD möglich. Bitte sicherstellen, dass ARCHICAD läuft."
 
+# Analyse Druchführen
 import TEST.test_Alles 
 
-# Test_main.py
-
-# Die Datei archicad_export importieren
-from Prozessor.Stützen_Analyse import export_stuetzen_liste
-
-# Eine beliebige Main-Funktion oder Logik, um das Skript zu starten
-def main():
-    # Stützenliste exportieren
-    export_stuetzen_liste()
-
-# Main aufrufen
-if __name__ == "__main__":
-    main()
-
-# Stütze Analyse PDF
-
-from Prozessor.Stützen_AnalysePDF import export_stuetzen_liste
-
-# Eine beliebige Main-Funktion oder Logik, um das Skript zu starten
-def main():
-    # Stützenliste exportieren
-    export_stuetzen_liste()
 
 # Main aufrufen
 if __name__ == "__main__":
