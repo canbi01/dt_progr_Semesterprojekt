@@ -13,12 +13,8 @@ conn = ACConnection.connect()
 assert conn, "Keine Verbindung zu ARCHICAD möglich. Bitte sicherstellen, dass ARCHICAD läuft."
 
 # Analyse Druchführen
-import TEST.test_Alles 
+import Prozessor.test_Alles 
 
-
-# Main aufrufen
-if __name__ == "__main__":
-    main()
 
 
 
