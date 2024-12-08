@@ -22,13 +22,14 @@ def load_offsets():
     except Exception as e:
         raise RuntimeError(f"Fehler beim Laden der Vermessungspunkte: {e}")
 
-def analyze_stuetzen(output_dir):
-    """Analysiert die Stützen und speichert die Ergebnisse in einer Excel-Datei."""
-    try:
-        # Offsets laden
-        load_offsets()
+from archicad import ACConnection
+import xlsxwriter
 
-        # Verbindung zu Archicad herstellen
+from archicad import ACConnection
+import xlsxwriter
+
+def analyze_stuetzen(output_excel):
+    try:
         conn = ACConnection.connect()
         assert conn, "Keine Verbindung zu ARCHICAD möglich. Bitte sicherstellen, dass ARCHICAD läuft."
 
@@ -36,18 +37,15 @@ def analyze_stuetzen(output_dir):
         act = conn.types
         acu = conn.utilities
 
-        # Stützen-Daten abrufen
         columns = acc.GetElementsByType("Column")
         element_id_property_id = acu.GetBuiltInPropertyId('General_ElementID')
         property_values = acc.GetPropertyValuesOfElements(columns, [element_id_property_id])
         bounding_boxes = acc.Get3DBoundingBoxes(columns)
 
-        # Excel-Datei vorbereiten
-        output_excel = os.path.join(output_dir, "Stuetzen_Liste.xlsx")
         workbook = xlsxwriter.Workbook(output_excel)
         worksheet = workbook.add_worksheet()
 
-        headers = ['Element-ID', 'X-Koordinate (Vermessungspunkt)', 'Y-Koordinate (Vermessungspunkt)', 'Müm (Unterster Punkt)', 'Höhe der Stütze']
+        headers = ['Element-ID', 'X-Koordinate (Vermessungspunkt)', 'Y-Koordinate (Vermessungspunkt)', 'MüM (Unterster Punkt)', 'Höhe der Stütze']
         for col_num, header in enumerate(headers):
             worksheet.write(0, col_num, header)
 
@@ -56,25 +54,23 @@ def analyze_stuetzen(output_dir):
         for prop, bounding_box in zip(property_values, bounding_boxes):
             if prop.propertyValues[0].propertyValue.value == "Baugespann":
                 element_id = prop.propertyValues[0].propertyValue.value
-                x_coord = round((bounding_box.boundingBox3D.xMin + bounding_box.boundingBox3D.xMax) / 2 - SURVEY_POINT_OFFSET_X, 2)
-                y_coord = round((bounding_box.boundingBox3D.yMin + bounding_box.boundingBox3D.yMax) / 2 - SURVEY_POINT_OFFSET_Y, 2)
-                z_min = round(bounding_box.boundingBox3D.zMin - SURVEY_POINT_OFFSET_Z, 2)
-                z_max = round(bounding_box.boundingBox3D.zMax - SURVEY_POINT_OFFSET_Z, 2)
+                x_coord = round((bounding_box.boundingBox3D.xMin + bounding_box.boundingBox3D.xMax) / 2, 2)
+                y_coord = round((bounding_box.boundingBox3D.yMin + bounding_box.boundingBox3D.yMax) / 2, 2)
+                z_min = round(bounding_box.boundingBox3D.zMin, 2)
+                z_max = round(bounding_box.boundingBox3D.zMax, 2)
                 height = round(z_max - z_min, 2)
 
-                # Daten in Excel schreiben
                 worksheet.write(row, 0, element_id)
                 worksheet.write(row, 1, x_coord)
                 worksheet.write(row, 2, y_coord)
                 worksheet.write(row, 3, z_min)
                 worksheet.write(row, 4, height)
 
-                # Daten für die PDF-Rückgabe sammeln
                 data.append([element_id, x_coord, y_coord, z_min, height])
+
                 row += 1
 
         workbook.close()
-        print(f"Analyse abgeschlossen. Ergebnisse gespeichert unter: {output_excel}")
         return data
 
     except Exception as e:

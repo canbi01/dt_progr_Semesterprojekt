@@ -3,6 +3,7 @@ import V2.InterfaceV2 as Interface
 import V2.StützenAuswertenV2 as Stuetzen
 import V2.pdfGeneratorV2 as PDF
 import os
+from V2.StützenAuswertenV2 import analyze_stuetzen
 
 def main():
     # Das Interface wird automatisch gestartet, wenn das Modul importiert wird.
