@@ -2,6 +2,7 @@ import xlsxwriter
 from archicad import ACConnection
 import pandas as pd
 from fpdf import FPDF
+import interface_final  # Importieren der Hauptdatei, um die Offsets zu laden
 
 def export_stuetzen_liste():
     # Verbindung zu Archicad herstellen
@@ -12,6 +13,11 @@ def export_stuetzen_liste():
     acc = conn.commands
     act = conn.types
     acu = conn.utilities
+
+    # Werte für den Vermessungspunkt relativ zum Projektursprung aus interface_final.py laden
+    SURVEY_POINT_OFFSET_X = interface_final.SURVEY_POINT_OFFSET_X
+    SURVEY_POINT_OFFSET_Y = interface_final.SURVEY_POINT_OFFSET_Y
+    SURVEY_POINT_OFFSET_Z = interface_final.SURVEY_POINT_OFFSET_Z
 
     # Alle Stützen-Elemente abrufen
     columns = acc.GetElementsByType("Column")
@@ -30,7 +36,7 @@ def export_stuetzen_liste():
     worksheet = workbook.add_worksheet()
 
     # Kopfzeilen hinzufügen
-    headers = ['Element-ID', 'X-Koordinate', 'Y-Koordinate', 'MüM (Unterster Punkt)', 'Höhe der Stütze']
+    headers = ['Element-ID', 'X-Koordinate (Vermessungspunkt)', 'Y-Koordinate (Vermessungspunkt)', 'MüM (Unterster Punkt)', 'Höhe der Stütze']
     for col_num, header in enumerate(headers):
         worksheet.write(0, col_num, header)
 
@@ -40,10 +46,10 @@ def export_stuetzen_liste():
     for prop, bounding_box in zip(property_values, bounding_boxes):
         if prop.propertyValues[0].propertyValue.value == "Baugespann":
             element_id = prop.propertyValues[0].propertyValue.value
-            x_coord = round(bounding_box.boundingBox3D.xMin, 2)
-            y_coord = round(bounding_box.boundingBox3D.yMin, 2)
-            z_min = round(bounding_box.boundingBox3D.zMin, 2)
-            z_max = round(bounding_box.boundingBox3D.zMax, 2)
+            x_coord = round((bounding_box.boundingBox3D.xMin + bounding_box.boundingBox3D.xMax) / 2 - SURVEY_POINT_OFFSET_X, 2)
+            y_coord = round((bounding_box.boundingBox3D.yMin + bounding_box.boundingBox3D.yMax) / 2 - SURVEY_POINT_OFFSET_Y, 2)
+            z_min = round(bounding_box.boundingBox3D.zMin - SURVEY_POINT_OFFSET_Z, 2)
+            z_max = round(bounding_box.boundingBox3D.zMax - SURVEY_POINT_OFFSET_Z, 2)
             height = round(z_max - z_min, 2)
 
             # Daten in die Excel-Tabelle schreiben
@@ -88,4 +94,4 @@ def export_stuetzen_liste():
     # Gesamtergebnis ausgeben
     print(f"Excel-Liste 'Stuetzen_Liste.xlsx' und PDF 'Stuetzen_Liste.pdf' wurden erfolgreich erstellt.")
 
-#export_stuetzen_liste()
+export_stuetzen_liste()
