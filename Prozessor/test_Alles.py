@@ -32,7 +32,7 @@ def PDF_Vorlage(output_file, plankopf_daten, headers, data):
 
     spalten_start = [50, 250, 450, 650]
     table_start_x = 50
-    table_start_y = page_height - 150
+    table_start_y = page_height - 250
     col_widths = [150, 150, 150, 150, 150]
     row_height = 20
     plankopf_start_y = page_height - 100
