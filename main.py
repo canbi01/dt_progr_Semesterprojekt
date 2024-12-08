@@ -12,6 +12,7 @@ if __name__ == "__main__":
 conn = ACConnection.connect()
 assert conn, "Keine Verbindung zu ARCHICAD möglich. Bitte sicherstellen, dass ARCHICAD läuft."
 
+import TEST.test_Alles 
 
 # Test_main.py
 
