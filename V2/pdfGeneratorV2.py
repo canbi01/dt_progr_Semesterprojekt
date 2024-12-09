@@ -70,3 +70,5 @@ def generate_pdf(output_dir, plankopf_daten, headers, data):
         print(f"PDF wurde erfolgreich unter {output_pdf} gespeichert.")
     except Exception as e:
         raise RuntimeError(f"Fehler beim Erstellen der PDF: {e}")
+    
+

@@ -7,7 +7,18 @@ SURVEY_POINT_OFFSET_X = 0.0
 SURVEY_POINT_OFFSET_Y = 0.0
 SURVEY_POINT_OFFSET_Z = 0.0
 
-def load_offsets():
+def load_offsets(file_path="survey_offsets.txt"):
+    try:
+        offsets = {"SURVEY_POINT_OFFSET_X": 0.0, "SURVEY_POINT_OFFSET_Y": 0.0, "SURVEY_POINT_OFFSET_Z": 0.0}
+        with open(file_path, "r") as file:
+            for line in file:
+                key, value = line.strip().split("=")
+                offsets[key] = float(value)
+        return offsets
+    except Exception as e:
+        raise RuntimeError(f"Fehler beim Laden der Offsets: {e}")
+
+#def load_offsets():
     """Liest die Vermessungspunkte aus der Datei 'survey_offsets.txt'."""
     global SURVEY_POINT_OFFSET_X, SURVEY_POINT_OFFSET_Y, SURVEY_POINT_OFFSET_Z
     try:
@@ -30,6 +41,12 @@ import xlsxwriter
 
 def analyze_stuetzen(output_excel):
     try:
+        # Offsets laden
+        offsets = load_offsets()
+        SURVEY_POINT_OFFSET_X = offsets["SURVEY_POINT_OFFSET_X"]
+        SURVEY_POINT_OFFSET_Y = offsets["SURVEY_POINT_OFFSET_Y"]
+        SURVEY_POINT_OFFSET_Z = offsets["SURVEY_POINT_OFFSET_Z"]
+
         conn = ACConnection.connect()
         assert conn, "Keine Verbindung zu ARCHICAD möglich. Bitte sicherstellen, dass ARCHICAD läuft."
 
@@ -54,10 +71,10 @@ def analyze_stuetzen(output_excel):
         for prop, bounding_box in zip(property_values, bounding_boxes):
             if prop.propertyValues[0].propertyValue.value == "Baugespann":
                 element_id = prop.propertyValues[0].propertyValue.value
-                x_coord = round((bounding_box.boundingBox3D.xMin + bounding_box.boundingBox3D.xMax) / 2, 2)
-                y_coord = round((bounding_box.boundingBox3D.yMin + bounding_box.boundingBox3D.yMax) / 2, 2)
-                z_min = round(bounding_box.boundingBox3D.zMin, 2)
-                z_max = round(bounding_box.boundingBox3D.zMax, 2)
+                x_coord = round((bounding_box.boundingBox3D.xMin + bounding_box.boundingBox3D.xMax) / 2 - SURVEY_POINT_OFFSET_X, 2)
+                y_coord = round((bounding_box.boundingBox3D.yMin + bounding_box.boundingBox3D.yMax) / 2 - SURVEY_POINT_OFFSET_Y, 2)
+                z_min = round(bounding_box.boundingBox3D.zMin - SURVEY_POINT_OFFSET_Z, 2)
+                z_max = round(bounding_box.boundingBox3D.zMax - SURVEY_POINT_OFFSET_Z, 2)
                 height = round(z_max - z_min, 2)
 
                 worksheet.write(row, 0, element_id)

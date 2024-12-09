@@ -109,12 +109,12 @@ def show_step_enter_offsets():
     entry_x = ctk.CTkEntry(frame_inputs)
     entry_x.grid(row=0, column=1, padx=5, pady=5)
 
-    label_y = ctk.CTkLabel(frame_inputs, text="Ostausricdhtung Y:")
+    label_y = ctk.CTkLabel(frame_inputs, text="Ostausrichtung:")
     label_y.grid(row=1, column=0, padx=5, pady=5, sticky="w")
     entry_y = ctk.CTkEntry(frame_inputs)
     entry_y.grid(row=1, column=1, padx=5, pady=5)
 
-    label_z = ctk.CTkLabel(frame_inputs, text="Höhe Z:")
+    label_z = ctk.CTkLabel(frame_inputs, text="Höhe:")
     label_z.grid(row=2, column=0, padx=5, pady=5, sticky="w")
     entry_z = ctk.CTkEntry(frame_inputs)
     entry_z.grid(row=2, column=1, padx=5, pady=5)
@@ -173,3 +173,4 @@ show_step_login()
 
 # Hauptfenster starten
 root.mainloop()
+
