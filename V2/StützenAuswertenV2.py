@@ -45,7 +45,7 @@ def analyze_stuetzen(output_excel):
         workbook = xlsxwriter.Workbook(output_excel)
         worksheet = workbook.add_worksheet()
 
-        headers = ['Element-ID', 'X-Koordinate (Vermessungspunkt)', 'Y-Koordinate (Vermessungspunkt)', 'MüM (Unterster Punkt)', 'Höhe der Stütze']
+        headers = ['Element-ID', 'X-Koordinate (VP)', 'Y-Koordinate (VP)', 'MüM (Unterster Punkt)', 'Höhe der Stütze']
         for col_num, header in enumerate(headers):
             worksheet.write(0, col_num, header)
 

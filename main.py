@@ -40,7 +40,7 @@ def main():
             "Adresse_Firma": "Adresse der Firma",
         }
         pdf_file = os.path.join(output_dir, "Stuetzen_Liste_Mit_Plankopf.pdf")
-        headers = ['Element-ID', 'X-Koordinate (Vermessungspunkt)', 'Y-Koordinate (Vermessungspunkt)', 'Müm (Unterster Punkt)', 'Höhe der Stütze']
+        headers = ['Element-ID', 'X-Koordinate (VP)', 'Y-Koordinate (VP)', 'Müm (Unterster Punkt)', 'Höhe der Stütze']
         PDF.generate_pdf(output_dir=output_dir, plankopf_daten=plankopf_daten, headers=headers, data=data)
         print(f"PDF erfolgreich erstellt und gespeichert unter {pdf_file}.")
     except Exception as e:
