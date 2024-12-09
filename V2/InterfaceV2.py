@@ -105,12 +105,12 @@ def show_step_enter_offsets():
     frame_inputs = ctk.CTkFrame(root)
     frame_inputs.pack(pady=10, padx=10, fill="both", expand=True)
 
-    label_x = ctk.CTkLabel(frame_inputs, text="Nordausrichtung:")
+    label_x = ctk.CTkLabel(frame_inputs, text="Ostausrichtung:")
     label_x.grid(row=0, column=0, padx=5, pady=5, sticky="w")
     entry_x = ctk.CTkEntry(frame_inputs)
     entry_x.grid(row=0, column=1, padx=5, pady=5)
 
-    label_y = ctk.CTkLabel(frame_inputs, text="Ostausrichtung:")
+    label_y = ctk.CTkLabel(frame_inputs, text="Nordausrichtung:")
     label_y.grid(row=1, column=0, padx=5, pady=5, sticky="w")
     entry_y = ctk.CTkEntry(frame_inputs)
     entry_y.grid(row=1, column=1, padx=5, pady=5)
