@@ -30,23 +30,30 @@ root.title("Archicad Baugespann-Auswertung")
 root.geometry("600x400")
 
 # Schrittweises Navigationssystem
-current_step = 1
+current_step = 1  # Beginne mit Schritt 1
 
 # Funktionen für die Schritte
 
 def show_next_step():
     global current_step
     if current_step == 1:
-        show_step_open_file()
+        show_step_login()
     elif current_step == 2:
-        show_step_enter_offsets()
+        show_step_open_file()
     elif current_step == 3:
-        show_step_select_output()
+        show_step_enter_offsets()
     elif current_step == 4:
+        show_step_select_output()
+    elif current_step == 5:
         root.destroy()  # Beendet das GUI, um das Analyse-Skript auszuführen
 
-# Schritt 1: Anmelden
+def increment_step():
+    """Erhöht den aktuellen Schritt und zeigt den nächsten Schritt."""
+    global current_step
+    current_step += 1
+    show_next_step()
 
+# Schritt 1: Anmelden
 def show_step_login():
     clear_window()
 
@@ -66,9 +73,7 @@ def show_step_login():
         benutzername = entry_email.get()
         passwort = entry_password.get()
         if benutzername == "admin" and passwort == "123":
-            global current_step
-            current_step += 1
-            show_next_step()
+            increment_step()
         else:
             messagebox.showerror("Fehler", "Falscher Benutzername oder falsches Passwort")
 
@@ -76,7 +81,6 @@ def show_step_login():
     button_login.pack(pady=12, padx=10)
 
 # Schritt 2: Archicad-Datei öffnen
-
 def show_step_open_file():
     clear_window()
 
@@ -84,15 +88,12 @@ def show_step_open_file():
     label_instructions.pack(pady=10)
 
     def continue_to_next():
-        global current_step
-        current_step += 1
-        show_next_step()
+        increment_step()
 
     button_continue = ctk.CTkButton(root, text="Weiter", command=continue_to_next)
     button_continue.pack(pady=10)
 
 # Schritt 3: Offsets eingeben
-
 def show_step_enter_offsets():
     clear_window()
 
@@ -126,9 +127,7 @@ def show_step_enter_offsets():
             SURVEY_POINT_OFFSET_Y = float(entry_y.get())
             SURVEY_POINT_OFFSET_Z = float(entry_z.get())
             save_offsets()
-            global current_step
-            current_step += 1
-            show_next_step()
+            increment_step()
         except ValueError:
             messagebox.showerror("Fehler", "Bitte geben Sie gültige numerische Werte ein.")
 
@@ -136,7 +135,6 @@ def show_step_enter_offsets():
     button_save_continue.pack(pady=10)
 
 # Schritt 4: Speicherpfad auswählen
-
 def show_step_select_output():
     clear_window()
 
@@ -149,18 +147,10 @@ def show_step_select_output():
         if output_directory:
             messagebox.showinfo("Verzeichnis gewählt", f"Dateien werden in {output_directory} gespeichert.")
 
-    def start_analysis():
-        if output_directory:
-            global current_step
-            current_step += 1
-            show_next_step()
-        else:
-            messagebox.showerror("Fehler", "Bitte wählen Sie ein Zielverzeichnis aus.")
-
     button_select_directory = ctk.CTkButton(root, text="Verzeichnis wählen", command=select_directory)
     button_select_directory.pack(pady=10)
 
-    button_start_analysis = ctk.CTkButton(root, text="Analyse starten", command=start_analysis)
+    button_start_analysis = ctk.CTkButton(root, text="Analyse starten", command=root.destroy)
     button_start_analysis.pack(pady=10)
 
 # Hilfsfunktion zum Löschen aller Widgets im Fenster
@@ -169,8 +159,7 @@ def clear_window():
         widget.destroy()
 
 # Starte mit Schritt 1
-show_step_login()
+show_next_step()
 
 # Hauptfenster starten
 root.mainloop()
-
