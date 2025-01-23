@@ -1,74 +1,29 @@
 from reportlab.lib.pagesizes import landscape, A4
 from reportlab.pdfgen import canvas
 import os
+from datetime import datetime
 
-def generate_pdf(output_dir, plankopf_daten, headers, data):
+def generate_pdf(output_path, project_data, stuetzen_data):
     """
-    Erstellt ein PDF basierend auf den analysierten Daten und speichert es im angegebenen Verzeichnis.
-    
-    :param output_dir: Zielverzeichnis für das PDF
-    :param plankopf_daten: Informationen für den Plankopf
-    :param headers: Spaltenüberschriften für die Tabelle
-    :param data: Tabellendaten
+    Generiert ein PDF mit Projektdaten und Stützenanalyse.
     """
-    try:
-        # PDF-Dateiname
-        output_pdf = os.path.join(output_dir, "Stuetzen_Liste_Mit_Plankopf.pdf")
-        
-        # PDF-Setup
-        page_width, page_height = landscape(A4)
-        pdf = canvas.Canvas(output_pdf, pagesize=landscape(A4))
-        pdf.setFont("Helvetica", 10)
+    pdf = canvas.Canvas(output_path, pagesize=landscape(A4))
+    pdf.setFont("Helvetica", 12)
 
-        spalten_start = [50, 250, 450, 650]
-        table_start_x = 50
-        table_start_y = page_height - 250
-        col_widths = [150, 150, 150, 150, 150]
-        row_height = 20
-        plankopf_start_y = page_height - 100
+    pdf.drawString(50, 550, f"Projekt: {project_data['name']}")
+    pdf.drawString(50, 530, f"Adresse: {project_data['details']['Adresse']}")
+    pdf.drawString(50, 510, f"Büro: {project_data['details']['Büro']}")
+    pdf.drawString(50, 490, f"Ausgabedatum: {datetime.now().strftime('%d.%m.%Y')}")
 
-        # Funktion: Text in Spalten zeichnen
-        def draw_spalte(text, spalte_index, y_offset, font="Helvetica", size=10, bold=False):
-            if bold:
-                font = "Helvetica-Bold"
-            pdf.setFont(font, size)
-            x_position = spalten_start[spalte_index]
-            pdf.drawString(x_position, y_offset, text)
+    table_start_y = 450
+    headers = ["Element ID", "X-Koordinate (VP)", "Y-Koordinate (VP)", "MüM", "Höhe"]
+    for i, header in enumerate(headers):
+        pdf.drawString(50 + i * 100, table_start_y, header)
 
-        # Plankopf einfügen
-        spalten_inhalte = [
-            ("Bauherrschaft:", plankopf_daten["Bauherrschaft"], "Adresse Bauherrschaft:", plankopf_daten["Adresse_Bauherrschaft"]),
-            ("Planummer:", plankopf_daten["Planummer"], "", ""),
-            ("Projekt:", plankopf_daten["Projekt"], "Firma:", plankopf_daten["Firma"]),
-            ("", "", "Adresse Firma:", plankopf_daten["Adresse_Firma"]),
-        ]
+    y = table_start_y - 20
+    for row in stuetzen_data:
+        for i, cell in enumerate(row):
+            pdf.drawString(50 + i * 100, y, str(cell))
+        y -= 20
 
-        y_offset = plankopf_start_y
-        for zeile in spalten_inhalte:
-            for spalte_index, inhalt in enumerate(zeile):
-                is_bold = spalte_index % 2 == 0
-                if inhalt.strip():
-                    draw_spalte(inhalt, spalte_index, y_offset, bold=is_bold)
-            y_offset -= row_height
-
-        # Tabellenkopf einfügen
-        pdf.setFont("Helvetica-Bold", 10)
-        current_y = table_start_y
-        for col_num, header in enumerate(headers):
-            pdf.drawString(table_start_x + col_num * col_widths[col_num], current_y, header)
-        pdf.setFont("Helvetica", 10)
-        current_y -= row_height
-
-        # Tabellendaten einfügen
-        for row in data:
-            for col_num, cell in enumerate(row):
-                pdf.drawString(table_start_x + col_num * col_widths[col_num], current_y, str(cell))
-            current_y -= row_height
-
-        # PDF speichern
-        pdf.save()
-        print(f"PDF wurde erfolgreich unter {output_pdf} gespeichert.")
-    except Exception as e:
-        raise RuntimeError(f"Fehler beim Erstellen der PDF: {e}")
-    
-
+    pdf.save()

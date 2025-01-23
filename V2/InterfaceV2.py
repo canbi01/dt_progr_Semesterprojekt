@@ -1,165 +1,113 @@
 import customtkinter as ctk
+import json
 from tkinter import messagebox, filedialog
 import os
 
-# Globale Variablen für Vermessungspunkt-Offsets
-SURVEY_POINT_OFFSET_X = 0.0
-SURVEY_POINT_OFFSET_Y = 0.0
-SURVEY_POINT_OFFSET_Z = 0.0
-output_directory = ""
+# Globale Variablen
+projects_file = "projects.json"
+current_project = None
 
-# Funktion zum Speichern der Offsets in einer Datei
-def save_offsets():
-    global SURVEY_POINT_OFFSET_X, SURVEY_POINT_OFFSET_Y, SURVEY_POINT_OFFSET_Z
-    try:
-        file_path = "survey_offsets.txt"
-        with open(file_path, "w") as file:
-            file.write(f"SURVEY_POINT_OFFSET_X={SURVEY_POINT_OFFSET_X}\n")
-            file.write(f"SURVEY_POINT_OFFSET_Y={SURVEY_POINT_OFFSET_Y}\n")
-            file.write(f"SURVEY_POINT_OFFSET_Z={SURVEY_POINT_OFFSET_Z}\n")
-        messagebox.showinfo("Erfolg", f"Offsets erfolgreich in {file_path} gespeichert!")
-    except Exception as e:
-        messagebox.showerror("Fehler", f"Fehler beim Speichern der Offsets: {e}")
+# Lade gespeicherte Projekte
+def load_projects():
+    if os.path.exists(projects_file):
+        with open(projects_file, "r") as file:
+            return json.load(file)
+    return {}
 
-# Hauptfenster erstellen
-ctk.set_appearance_mode("Dark")
-ctk.set_default_color_theme("dark-blue")
+# Speichere Projekte
+def save_projects(projects):
+    with open(projects_file, "w") as file:
+        json.dump(projects, file, indent=4)
 
-root = ctk.CTk()
-root.title("Archicad Baugespann-Auswertung")
-root.geometry("600x400")
+def main_interface():
+    global current_project
+    projects = load_projects()
 
-# Schrittweises Navigationssystem
-current_step = 1  # Beginne mit Schritt 1
-
-# Funktionen für die Schritte
-
-def show_next_step():
-    global current_step
-    if current_step == 1:
-        show_step_login()
-    elif current_step == 2:
-        show_step_open_file()
-    elif current_step == 3:
-        show_step_enter_offsets()
-    elif current_step == 4:
-        show_step_select_output()
-    elif current_step == 5:
-        root.destroy()  # Beendet das GUI, um das Analyse-Skript auszuführen
-
-def increment_step():
-    """Erhöht den aktuellen Schritt und zeigt den nächsten Schritt."""
-    global current_step
-    current_step += 1
-    show_next_step()
-
-# Schritt 1: Anmelden
-def show_step_login():
-    clear_window()
-
-    label_title = ctk.CTkLabel(root, text="Anmelden", font=("Arial", 24))
-    label_title.pack(pady=12, padx=10)
-
-    label_subtitle = ctk.CTkLabel(root, text="Melden Sie sich an, um fortzufahren.", font=("Arial", 14))
-    label_subtitle.pack(pady=5, padx=10)
-
-    entry_email = ctk.CTkEntry(root, placeholder_text="Benutzername")
-    entry_email.pack(pady=12, padx=10)
-
-    entry_password = ctk.CTkEntry(root, placeholder_text="Passwort", show="*")
-    entry_password.pack(pady=12, padx=10)
-
-    def login():
-        benutzername = entry_email.get()
-        passwort = entry_password.get()
-        if benutzername == "admin" and passwort == "123":
-            increment_step()
+    def verify_license():
+        license_key = entry_license.get()
+        if license_key == "123456":
+            project_selection()
         else:
-            messagebox.showerror("Fehler", "Falscher Benutzername oder falsches Passwort")
+            messagebox.showerror("Ungültige Lizenz", "Bitte geben Sie eine gültige Lizenznummer ein.")
 
-    button_login = ctk.CTkButton(root, text="Anmelden", command=login)
-    button_login.pack(pady=12, padx=10)
+    def project_selection():
+        nonlocal projects
+        root.destroy()
+        project_window = ctk.CTk()
+        project_window.title("Projekt auswählen")
 
-# Schritt 2: Archicad-Datei öffnen
-def show_step_open_file():
-    clear_window()
+        def on_project_select():
+            nonlocal current_project
+            selected_project = project_listbox.get(project_listbox.curselection())
+            current_project = projects[selected_project]
+            project_window.destroy()
 
-    label_instructions = ctk.CTkLabel(root, text="Öffnen Sie die gewünschte Archicad-Datei.", font=("Arial", 14), justify="left", wraplength=550)
-    label_instructions.pack(pady=10)
+        def add_project():
+            def save_new_project():
+                new_project = {
+                    "name": entry_project_name.get(),
+                    "details": {
+                        "Parzelle": entry_parzelle.get(),
+                        "Adresse": entry_adresse.get(),
+                        "Büro": entry_buero.get(),
+                        "Büro-Adresse": entry_buero_adresse.get(),
+                        "Bauherrschaft": {
+                            "Name": entry_bauherr_name.get(),
+                            "Adresse": entry_bauherr_adresse.get(),
+                        },
+                    },
+                    "offsets": {
+                        "Ostausrichtung": float(entry_ost.get()),
+                        "Nordausrichtung": float(entry_nord.get()),
+                        "Höhe": float(entry_hoehe.get()),
+                        "Nordwinkel": float(entry_nordwinkel.get()),
+                    },
+                }
+                projects[new_project["name"]] = new_project
+                save_projects(projects)
+                add_project_window.destroy()
+                project_selection()
 
-    def continue_to_next():
-        increment_step()
+            add_project_window = ctk.CTkToplevel(project_window)
+            add_project_window.title("Neues Projekt erfassen")
+            
+            # GUI für Projekteingabe (Name, Details, Offsets)
+            entry_project_name = ctk.CTkEntry(add_project_window, placeholder_text="Projektname")
+            entry_parzelle = ctk.CTkEntry(add_project_window, placeholder_text="Parzelle")
+            entry_adresse = ctk.CTkEntry(add_project_window, placeholder_text="Adresse")
+            entry_buero = ctk.CTkEntry(add_project_window, placeholder_text="Büro")
+            entry_buero_adresse = ctk.CTkEntry(add_project_window, placeholder_text="Büro-Adresse")
+            entry_bauherr_name = ctk.CTkEntry(add_project_window, placeholder_text="Bauherrschaft Name")
+            entry_bauherr_adresse = ctk.CTkEntry(add_project_window, placeholder_text="Bauherrschaft Adresse")
+            entry_ost = ctk.CTkEntry(add_project_window, placeholder_text="Ostausrichtung")
+            entry_nord = ctk.CTkEntry(add_project_window, placeholder_text="Nordausrichtung")
+            entry_hoehe = ctk.CTkEntry(add_project_window, placeholder_text="Höhe")
+            entry_nordwinkel = ctk.CTkEntry(add_project_window, placeholder_text="Nordwinkel")
 
-    button_continue = ctk.CTkButton(root, text="Weiter", command=continue_to_next)
-    button_continue.pack(pady=10)
+            # Speichern-Button
+            button_save = ctk.CTkButton(add_project_window, text="Speichern", command=save_new_project)
+            button_save.pack()
 
-# Schritt 3: Offsets eingeben
-def show_step_enter_offsets():
-    clear_window()
+        project_listbox = ctk.CTkListbox(project_window)
+        for project_name in projects.keys():
+            project_listbox.insert("end", project_name)
 
-    label_instructions = ctk.CTkLabel(root, text=(
-        "Gehen Sie über das Menu > Verwaltung > Projekteinstellung > Lageeinstellungen und kopieren Sie die Vermessungspunkt-Koordinaten in die Felder."
-    ), font=("Arial", 14), justify="left", wraplength=550)
-    label_instructions.pack(pady=10)
+        project_listbox.pack()
+        ctk.CTkButton(project_window, text="Projekt auswählen", command=on_project_select).pack()
+        ctk.CTkButton(project_window, text="Neues Projekt hinzufügen", command=add_project).pack()
+        project_window.mainloop()
 
-    frame_inputs = ctk.CTkFrame(root)
-    frame_inputs.pack(pady=10, padx=10, fill="both", expand=True)
+    # Login-Bildschirm
+    root = ctk.CTk()
+    root.title("AEP-ArchicadEfficiencyProgramm")
+    label_title = ctk.CTkLabel(root, text="Bitte tragen Sie Ihre Lizenznummer ein")
+    label_title.pack()
 
-    label_x = ctk.CTkLabel(frame_inputs, text="Ostausrichtung:")
-    label_x.grid(row=0, column=0, padx=5, pady=5, sticky="w")
-    entry_x = ctk.CTkEntry(frame_inputs)
-    entry_x.grid(row=0, column=1, padx=5, pady=5)
+    entry_license = ctk.CTkEntry(root, placeholder_text="Lizenznummer")
+    entry_license.pack()
 
-    label_y = ctk.CTkLabel(frame_inputs, text="Nordausrichtung:")
-    label_y.grid(row=1, column=0, padx=5, pady=5, sticky="w")
-    entry_y = ctk.CTkEntry(frame_inputs)
-    entry_y.grid(row=1, column=1, padx=5, pady=5)
+    button_verify = ctk.CTkButton(root, text="Weiter", command=verify_license)
+    button_verify.pack()
 
-    label_z = ctk.CTkLabel(frame_inputs, text="Höhe:")
-    label_z.grid(row=2, column=0, padx=5, pady=5, sticky="w")
-    entry_z = ctk.CTkEntry(frame_inputs)
-    entry_z.grid(row=2, column=1, padx=5, pady=5)
-
-    def save_and_continue():
-        global SURVEY_POINT_OFFSET_X, SURVEY_POINT_OFFSET_Y, SURVEY_POINT_OFFSET_Z
-        try:
-            SURVEY_POINT_OFFSET_X = float(entry_x.get())
-            SURVEY_POINT_OFFSET_Y = float(entry_y.get())
-            SURVEY_POINT_OFFSET_Z = float(entry_z.get())
-            save_offsets()
-            increment_step()
-        except ValueError:
-            messagebox.showerror("Fehler", "Bitte geben Sie gültige numerische Werte ein.")
-
-    button_save_continue = ctk.CTkButton(root, text="Speichern und Weiter", command=save_and_continue)
-    button_save_continue.pack(pady=10)
-
-# Schritt 4: Speicherpfad auswählen
-def show_step_select_output():
-    clear_window()
-
-    label_instructions = ctk.CTkLabel(root, text="Wählen Sie ein Zielverzeichnis für die Ergebnisse der Analyse.", font=("Arial", 14), justify="left", wraplength=550)
-    label_instructions.pack(pady=10)
-
-    def select_directory():
-        global output_directory
-        output_directory = filedialog.askdirectory(title="Zielverzeichnis wählen")
-        if output_directory:
-            messagebox.showinfo("Verzeichnis gewählt", f"Dateien werden in {output_directory} gespeichert.")
-
-    button_select_directory = ctk.CTkButton(root, text="Verzeichnis wählen", command=select_directory)
-    button_select_directory.pack(pady=10)
-
-    button_start_analysis = ctk.CTkButton(root, text="Analyse starten", command=root.destroy)
-    button_start_analysis.pack(pady=10)
-
-# Hilfsfunktion zum Löschen aller Widgets im Fenster
-def clear_window():
-    for widget in root.winfo_children():
-        widget.destroy()
-
-# Starte mit Schritt 1
-show_next_step()
-
-# Hauptfenster starten
-root.mainloop()
+    root.mainloop()
+    return "123456", current_project

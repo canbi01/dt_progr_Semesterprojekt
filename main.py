@@ -1,57 +1,32 @@
-from archicad import ACConnection
-import V2.InterfaceV2 as Interface
-import V2.StützenAuswertenV2 as Stuetzen
-import V2.pdfGeneratorV2 as PDF
+from V2.InterfaceV2 import main_interface
+from V2.StuetzenAuswertenV2 import analyze_stuetzen
+from V2.pdfGeneratorV2 import generate_pdf
 import os
 
 def main():
-    # Das Interface wird automatisch gestartet, wenn das Modul importiert wird.
-    
-    # Zielverzeichnis und Offsets aus Interface erhalten
-    output_dir = Interface.output_directory
-    if not output_dir:
-        raise RuntimeError("Kein Zielverzeichnis ausgewählt. Bitte starten Sie das Programm neu.")
+    # Starte die Haupt-Benutzeroberfläche
+    license_key, current_project = main_interface()
 
-    # Verbindung zu Archicad herstellen
-    conn = ACConnection.connect()
-    if not conn:
-        raise RuntimeError("Keine Verbindung zu ARCHICAD möglich. Bitte sicherstellen, dass ARCHICAD läuft.")
-    print("Erfolgreich mit Archicad verbunden.")
+    # Prüfe, ob ein Projekt ausgewählt wurde
+    if not current_project:
+        raise RuntimeError("Kein Projekt ausgewählt. Programm wird beendet.")
 
-    # Schritt 1: Offsets laden
+    # Verbindung zu Archicad herstellen und Stützen analysieren
+    print(f"Starte Analyse für das Projekt: {current_project['name']}")
+    offsets = current_project["offsets"]
     try:
-        offsets = Stuetzen.load_offsets()  # Offsets laden
-        SURVEY_POINT_OFFSET_X = offsets["SURVEY_POINT_OFFSET_X"]
-        SURVEY_POINT_OFFSET_Y = offsets["SURVEY_POINT_OFFSET_Y"]
-        SURVEY_POINT_OFFSET_Z = offsets["SURVEY_POINT_OFFSET_Z"]
-    except Exception as e:
-        raise RuntimeError(f"Fehler beim Laden der Offsets: {e}")
-
-    # Schritt 2: Stützenanalyse durchführen
-    try:
-        print("Starte Stützenanalyse...")
-        excel_file = os.path.join(output_dir, "Stuetzen_Liste.xlsx")
-        data = Stuetzen.analyze_stuetzen(output_excel=excel_file)
-        print(f"Stützenanalyse abgeschlossen. Ergebnisse in {excel_file} gespeichert.")
-    except Exception as e:
+        data = analyze_stuetzen(offsets)
+    except RuntimeError as e:
         raise RuntimeError(f"Fehler bei der Stützenanalyse: {e}")
 
-    # Schritt 3: PDF erstellen
+    # Generiere PDF basierend auf den Analyseergebnissen
+    output_dir = os.path.join("outputs", current_project["name"])
+    os.makedirs(output_dir, exist_ok=True)
+    pdf_file = os.path.join(output_dir, "Stuetzen_Liste_Mit_Plankopf.pdf")
     try:
-        print("Erstelle PDF...")
-        plankopf_daten = {
-            "Bauherrschaft": "Bauherrschaft",
-            "Adresse_Bauherrschaft": "Adresse der Bauherrschaft",
-            "Planummer": "1234",
-            "Projekt": "Projektname",
-            "Firma": "Ihre Firma",
-            "Adresse_Firma": "Adresse der Firma",
-        }
-        pdf_file = os.path.join(output_dir, "Stuetzen_Liste_Mit_Plankopf.pdf")
-        headers = ['Element-ID', 'X-Koordinate (VP)', 'Y-Koordinate (VP)', 'MüM (Unterster Punkt)', 'Höhe der Stütze']
-        PDF.generate_pdf(output_dir=output_dir, plankopf_daten=plankopf_daten, headers=headers, data=data)
-        print(f"PDF erfolgreich erstellt und gespeichert unter {pdf_file}.")
-    except Exception as e:
+        generate_pdf(pdf_file, current_project, data)
+        print(f"PDF erfolgreich erstellt: {pdf_file}")
+    except RuntimeError as e:
         raise RuntimeError(f"Fehler beim Erstellen der PDF: {e}")
 
     print("Programm erfolgreich abgeschlossen.")
