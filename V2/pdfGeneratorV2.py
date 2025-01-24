@@ -37,9 +37,7 @@ def generate_pdf(output_dir, project_details, headers, data):
         pdf.drawString(logo_x, logo_y, "AEP")
         pdf.setFont("Helvetica", 14)
         pdf.drawString(logo_x, logo_y - 20, "Archicad Efficiency Program")
-        pdf.setFont("Helvetica", 8)
-        pdf.drawString(logo_x, logo_y - 40, "Archicad Efficiency Program - 2025")
-
+        
         # Add project details header
         plankopf_start_y = page_height - 100
         pdf.setFont("Helvetica-Bold", 12)
