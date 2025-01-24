@@ -209,7 +209,11 @@ def select_project_interface():
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     return projects.get(selected_project.get(), None)
+=======
+    return {"name": current_project, "details": projects.get(current_project, {}).get("details", {})}
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 =======
     return {"name": current_project, "details": projects.get(current_project, {}).get("details", {})}
 >>>>>>> parent of 81c6503 (löschfunktion eingebaut)
@@ -227,7 +231,13 @@ def select_shortcut():
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     root.geometry("400x300")
+=======
+    root.geometry("400x600")
+
+    add_aep_logo(root)
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 =======
     root.geometry("400x600")
 
@@ -269,6 +279,7 @@ def select_shortcut():
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 def show_error(message):
     """Zeigt eine Fehlermeldung in einem Popup-Fenster an."""
     messagebox.showerror("Fehler", message)
@@ -277,6 +288,8 @@ def select_output_directory():
     """Startet die Auswahl eines Zielverzeichnisses."""
     return filedialog.askdirectory(title="Zielverzeichnis wählen")
 
+=======
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 =======
 >>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 =======
@@ -292,6 +305,11 @@ def show_analysis_instructions(project_name):
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    add_aep_logo(root)
+
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 =======
     add_aep_logo(root)
 
@@ -318,8 +336,11 @@ def show_analysis_instructions(project_name):
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     root.mainloop()
 =======
+=======
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 =======
 >>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 =======
@@ -330,6 +351,10 @@ def select_output_directory():
     """Startet die Auswahl eines Zielverzeichnisses."""
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+    return filedialog.askdirectory(title="Zielverzeichnis wählen")
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
     return filedialog.askdirectory(title="Zielverzeichnis wählen")
 >>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 =======
