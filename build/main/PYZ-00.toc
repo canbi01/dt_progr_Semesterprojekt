@@ -309,9 +309,9 @@
    'C:\\Users\\Ben '
    'Wild\\OneDrive\\Dokumente\\GitHub\\dt_progr_Semesterprojekt\\V2\\InterfaceV2.py',
    'PYMODULE'),
-  ('V2.StützenAuswertenV2',
+  ('V2.StuetzenAuswertenV2',
    'C:\\Users\\Ben '
-   'Wild\\OneDrive\\Dokumente\\GitHub\\dt_progr_Semesterprojekt\\V2\\StützenAuswertenV2.py',
+   'Wild\\OneDrive\\Dokumente\\GitHub\\dt_progr_Semesterprojekt\\V2\\StuetzenAuswertenV2.py',
    'PYMODULE'),
   ('V2.pdfGeneratorV2',
    'C:\\Users\\Ben '
@@ -3507,154 +3507,6 @@
   ('webbrowser',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_3.12.2288.0_x64__qbz5n2kfra8p0\\Lib\\webbrowser.py',
-   'PYMODULE'),
-  ('xlsxwriter',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\__init__.py',
-   'PYMODULE'),
-  ('xlsxwriter.app',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\app.py',
-   'PYMODULE'),
-  ('xlsxwriter.chart',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\chart.py',
-   'PYMODULE'),
-  ('xlsxwriter.chart_area',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\chart_area.py',
-   'PYMODULE'),
-  ('xlsxwriter.chart_bar',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\chart_bar.py',
-   'PYMODULE'),
-  ('xlsxwriter.chart_column',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\chart_column.py',
-   'PYMODULE'),
-  ('xlsxwriter.chart_doughnut',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\chart_doughnut.py',
-   'PYMODULE'),
-  ('xlsxwriter.chart_line',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\chart_line.py',
-   'PYMODULE'),
-  ('xlsxwriter.chart_pie',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\chart_pie.py',
-   'PYMODULE'),
-  ('xlsxwriter.chart_radar',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\chart_radar.py',
-   'PYMODULE'),
-  ('xlsxwriter.chart_scatter',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\chart_scatter.py',
-   'PYMODULE'),
-  ('xlsxwriter.chart_stock',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\chart_stock.py',
-   'PYMODULE'),
-  ('xlsxwriter.chartsheet',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\chartsheet.py',
-   'PYMODULE'),
-  ('xlsxwriter.comments',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\comments.py',
-   'PYMODULE'),
-  ('xlsxwriter.contenttypes',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\contenttypes.py',
-   'PYMODULE'),
-  ('xlsxwriter.core',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\core.py',
-   'PYMODULE'),
-  ('xlsxwriter.custom',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\custom.py',
-   'PYMODULE'),
-  ('xlsxwriter.drawing',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\drawing.py',
-   'PYMODULE'),
-  ('xlsxwriter.exceptions',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\exceptions.py',
-   'PYMODULE'),
-  ('xlsxwriter.format',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\format.py',
-   'PYMODULE'),
-  ('xlsxwriter.metadata',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\metadata.py',
-   'PYMODULE'),
-  ('xlsxwriter.packager',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\packager.py',
-   'PYMODULE'),
-  ('xlsxwriter.relationships',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\relationships.py',
-   'PYMODULE'),
-  ('xlsxwriter.rich_value',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\rich_value.py',
-   'PYMODULE'),
-  ('xlsxwriter.rich_value_rel',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\rich_value_rel.py',
-   'PYMODULE'),
-  ('xlsxwriter.rich_value_structure',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\rich_value_structure.py',
-   'PYMODULE'),
-  ('xlsxwriter.rich_value_types',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\rich_value_types.py',
-   'PYMODULE'),
-  ('xlsxwriter.shape',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\shape.py',
-   'PYMODULE'),
-  ('xlsxwriter.sharedstrings',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\sharedstrings.py',
-   'PYMODULE'),
-  ('xlsxwriter.styles',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\styles.py',
-   'PYMODULE'),
-  ('xlsxwriter.table',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\table.py',
-   'PYMODULE'),
-  ('xlsxwriter.theme',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\theme.py',
-   'PYMODULE'),
-  ('xlsxwriter.utility',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\utility.py',
-   'PYMODULE'),
-  ('xlsxwriter.vml',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\vml.py',
-   'PYMODULE'),
-  ('xlsxwriter.workbook',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\workbook.py',
-   'PYMODULE'),
-  ('xlsxwriter.worksheet',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\worksheet.py',
-   'PYMODULE'),
-  ('xlsxwriter.xmlwriter',
-   'C:\\Users\\Ben '
-   'Wild\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\site-packages\\xlsxwriter\\xmlwriter.py',
    'PYMODULE'),
   ('xml',
    'C:\\Program '

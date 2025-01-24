@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('projects.json', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
