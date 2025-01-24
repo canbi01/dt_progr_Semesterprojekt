@@ -48,7 +48,7 @@ def analyze_stuetzen(project_offsets):
         data = []
         for prop, bounding_box in zip(property_values, bounding_boxes):
             element_id = prop.propertyValues[0].propertyValue.value
-            if element_id not in accepted_ids:  # Prüfe auf akzeptierte IDs
+            if element_id not in accepted_ids:
                 continue
 
             # Lokale Koordinaten berechnen
