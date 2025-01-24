@@ -20,7 +20,7 @@ def save_projects(projects):
 
 # Add "AEP" logo at the top right of each window
 def add_aep_logo(window):
-    logo_label = tk.Label(window, text="AEP", font=("Arial", 20, "bold"), fg="white")
+    logo_label = tk.Label(window, text="AEP", font=("Arial", 20, "bold"), fg="black")
     logo_label.pack(side=tk.TOP, anchor=tk.NE, padx=10, pady=10)
 
 def start_license_verification():
@@ -211,13 +211,13 @@ def select_project_interface():
 
     root.mainloop()
 
-    return projects.get(selected_project.get(), None)
+    return {"name": selected_project.get(), "details": projects.get(selected_project.get(), {}).get("details", {})}
 
 def select_shortcut():
     """Zeigt ein Fenster zur Auswahl eines Shortcuts."""
     root = tk.Tk()
     root.title("Shortcut auswählen")
-    root.geometry("400x300")
+    root.geometry("400x600")
 
     add_aep_logo(root)
 
@@ -255,7 +255,7 @@ def show_analysis_instructions(project_name):
         f"Öffnen Sie die Archicad-Datei für Projekt {project_name} und folgen Sie diesen Anweisungen:\n\n"
         "1. Navigieren Sie ins 3D-Fenster.\n"
         "2. Öffnen Sie das Stützenwerkzeug und setzen Sie die Element-ID 'Baugespann'.\n"
-        "3. Platzieren Sie die Stützen an den gewünschten Stellen."
+        "3. Platzieren Sie die Stützen an den gewünschten Stellen auf dem gewachsenen Terrain und ziehen Sie diese bis zur Gebäudekante hoch."
     )
 
     tk.Label(root, text=instructions, wraplength=380, justify="left", font=("Arial", 12)).pack(pady=10)
@@ -267,3 +267,4 @@ def show_analysis_instructions(project_name):
 def select_output_directory():
     """Startet die Auswahl eines Zielverzeichnisses."""
     return filedialog.askdirectory(title="Zielverzeichnis wählen")
+ 
