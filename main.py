@@ -1,32 +1,62 @@
-from V2.InterfaceV2 import main_interface
-from V2.StuetzenAuswertenV2 import analyze_stuetzen
-from V2.pdfGeneratorV2 import generate_pdf
 import os
+from archicad import ACConnection
+import V2.InterfaceV2 as Interface
+import V2.StuetzenAuswertenV2 as Stuetzen
+import V2.pdfGeneratorV2 as PDF
 
 def main():
-    # Öffne das Interface
-    project_data, output_dir = main_interface()
-
-    if not project_data or not output_dir:
-        raise RuntimeError("Keine Projektdaten oder Zielverzeichnis verfügbar.")
-
-    # Verbindung zu Archicad prüfen
     try:
+        # Step 1: License Verification
+        license_key = Interface.start_license_verification()
+        if license_key != "123456":
+            raise RuntimeError("Ungültige Lizenznummer. Das Programm wird beendet.")
+
+        # Step 2: Project Selection
+        project = Interface.select_project()
+        if not project:
+            raise RuntimeError("Kein Projekt ausgewählt. Bitte starten Sie das Programm neu.")
+
+        project_name = project.get("name", "Unbekanntes Projekt")
+        offsets = project.get("details", {}).get("offsets", {})
+
+        # Step 3: Shortcut Selection
+        selected_shortcut = Interface.select_shortcut()
+        if selected_shortcut != "Ausmass Baugespann":
+            print("Shortcut nicht implementiert. Das Programm wird beendet.")
+            return
+
+        # Step 4: Archicad Connection
+        conn = ACConnection.connect()
+        if not conn:
+            Interface.show_error("Archicad Verbindung fehlgeschlagen. Bitte Archicad erneut öffnen.")
+            return
+
+        print(f"Erfolgreich mit Archicad verbunden für Projekt {project_name}.")
+
+        # Step 5: Instructions
+        Interface.show_analysis_instructions(project_name)
+
+        # Step 6: Output Directory Selection
+        output_dir = Interface.select_output_directory()
+        if not output_dir:
+            raise RuntimeError("Kein Zielverzeichnis ausgewählt. Bitte starten Sie das Programm neu.")
+
+        # Step 7: Stützen Analysis
         print("Starte Stützenanalyse...")
-        data = analyze_stuetzen(project_data["Georeferenzierung"])
+        data = Stuetzen.analyze_stuetzen(offsets)
         print("Stützenanalyse abgeschlossen.")
 
-        # PDF-Generierung
+        # Step 8: PDF Generation
         print("Erstelle PDF...")
-        pdf_file = os.path.join(output_dir, "Ausmass_Baugespann.pdf")
-        generate_pdf(
-            output_file=pdf_file,
-            project_info=project_data,
-            data=data
-        )
-        print(f"PDF erfolgreich erstellt: {pdf_file}")
+        plankopf_daten = project.get("details", {})
+        headers = ['Element-ID', 'X-Koordinate (VP)', 'Y-Koordinate (VP)', 'MüM (unterster Punkt)', 'Höhe der Stütze']
+        PDF.generate_pdf(output_dir, plankopf_daten, headers, data)
+        print(f"PDF erfolgreich erstellt und gespeichert in {output_dir}.")
+
+        print("Programm erfolgreich abgeschlossen.")
+
     except Exception as e:
-        print(f"Fehler: {e}")
+        Interface.show_error(f"Ein Fehler ist aufgetreten: {e}")
 
 if __name__ == "__main__":
     main()
