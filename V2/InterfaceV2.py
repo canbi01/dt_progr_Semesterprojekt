@@ -18,11 +18,18 @@ def save_projects(projects):
     with open(projects_file, "w") as file:
         json.dump(projects, file, indent=4)
 
+# Add "AEP" logo at the top right of each window
+def add_aep_logo(window):
+    logo_label = tk.Label(window, text="AEP", font=("Arial", 20, "bold"), fg="white")
+    logo_label.pack(side=tk.TOP, anchor=tk.NE, padx=10, pady=10)
+
 def start_license_verification():
     """Startet die Lizenzprüfung."""
     root = tk.Tk()
     root.title("Lizenzprüfung")
     root.geometry("400x200")
+
+    add_aep_logo(root)
 
     license_key_var = tk.StringVar()
 
@@ -45,6 +52,8 @@ def select_project_interface():
     root.title("AEP - Archicad Efficiency Program")
     root.geometry("800x600")
 
+    add_aep_logo(root)
+
     projects = load_projects()
     selected_project = tk.StringVar()
     current_project = None
@@ -62,6 +71,30 @@ def select_project_interface():
             projects[current_project]["details"]["Nordwinkel"] = entry_nordwinkel.get()
             save_projects(projects)
             messagebox.showinfo("Speichern", f"Änderungen für Projekt '{current_project}' wurden gespeichert.")
+
+    # Delete selected project
+    def delete_selected_project():
+        """Löscht das ausgewählte Projekt aus der Liste und aus dem JSON-File."""
+        selection = project_listbox.curselection()
+        if not selection:
+            messagebox.showerror("Fehler", "Bitte wählen Sie ein Projekt aus, das gelöscht werden soll.")
+            return
+
+        selected_project = project_listbox.get(selection)
+        if messagebox.askyesno("Projekt löschen", f"Möchten Sie das Projekt '{selected_project}' wirklich löschen?"):
+            del projects[selected_project]
+            save_projects(projects)
+            project_listbox.delete(selection)
+            messagebox.showinfo("Gelöscht", f"Projekt '{selected_project}' wurde gelöscht.")
+            # Reset the details fields
+            entry_parzelle.delete(0, tk.END)
+            entry_adresse.delete(0, tk.END)
+            entry_projektverfasser.delete(0, tk.END)
+            entry_bauherrschaft.delete(0, tk.END)
+            entry_ost.delete(0, tk.END)
+            entry_nord.delete(0, tk.END)
+            entry_hoehe.delete(0, tk.END)
+            entry_nordwinkel.delete(0, tk.END)
 
     # Proceed to shortcut selection
     def proceed_to_shortcut_selection():
@@ -173,13 +206,53 @@ def select_project_interface():
 
     root.mainloop()
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+    return projects.get(selected_project.get(), None)
+=======
     return {"name": current_project, "details": projects.get(current_project, {}).get("details", {})}
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    return {"name": current_project, "details": projects.get(current_project, {}).get("details", {})}
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    return {"name": current_project, "details": projects.get(current_project, {}).get("details", {})}
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    return {"name": current_project, "details": projects.get(current_project, {}).get("details", {})}
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 
 def select_shortcut():
     """Zeigt ein Fenster zur Auswahl eines Shortcuts."""
     root = tk.Tk()
     root.title("Shortcut auswählen")
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
     root.geometry("400x300")
+=======
+    root.geometry("400x600")
+
+    add_aep_logo(root)
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    root.geometry("400x600")
+
+    add_aep_logo(root)
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    root.geometry("400x600")
+
+    add_aep_logo(root)
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    root.geometry("400x600")
+
+    add_aep_logo(root)
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 
     selected_shortcut = tk.StringVar(value="")
 
@@ -203,12 +276,52 @@ def select_shortcut():
     root.mainloop()
     return selected_shortcut.get()
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+def show_error(message):
+    """Zeigt eine Fehlermeldung in einem Popup-Fenster an."""
+    messagebox.showerror("Fehler", message)
+
+def select_output_directory():
+    """Startet die Auswahl eines Zielverzeichnisses."""
+    return filedialog.askdirectory(title="Zielverzeichnis wählen")
+
+=======
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 def show_analysis_instructions(project_name):
     """Zeigt Anweisungen zur Analyse an."""
     root = tk.Tk()
     root.title("Anweisungen")
     root.geometry("400x300")
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    add_aep_logo(root)
+
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    add_aep_logo(root)
+
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    add_aep_logo(root)
+
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    add_aep_logo(root)
+
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
     instructions = (
         f"Öffnen Sie die Archicad-Datei für Projekt {project_name} und folgen Sie diesen Anweisungen:\n\n"
         "1. Navigieren Sie ins 3D-Fenster.\n"
@@ -220,8 +333,33 @@ def show_analysis_instructions(project_name):
 
     tk.Button(root, text="Weiter", command=root.destroy).pack(pady=10)
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+    root.mainloop()
+=======
+=======
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
     root.mainloop()
 
 def select_output_directory():
     """Startet die Auswahl eines Zielverzeichnisses."""
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
     return filedialog.askdirectory(title="Zielverzeichnis wählen")
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    return filedialog.askdirectory(title="Zielverzeichnis wählen")
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    return filedialog.askdirectory(title="Zielverzeichnis wählen")
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
+=======
+    return filedialog.askdirectory(title="Zielverzeichnis wählen")
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
