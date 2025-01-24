@@ -1,4 +1,5 @@
 import os
+import archicad
 from archicad import ACConnection
 import V2.InterfaceV2 as Interface
 import V2.StuetzenAuswertenV2 as Stuetzen
