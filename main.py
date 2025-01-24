@@ -18,6 +18,7 @@ def main():
         if not project:
             raise RuntimeError("Kein Projekt ausgewählt. Bitte starten Sie das Programm neu.")
 
+        # Extract project details, including name
         project_name = project.get("name", "Unbekanntes Projekt")
         project_details = project.get("details", {})
         offsets = {
@@ -57,7 +58,7 @@ def main():
         # Step 8: PDF Generation
         print("Erstelle PDF...")
         plankopf_daten = {
-            "Projekt": project_name,
+            "Projekt": project_name,  # Ensure the name is passed here
             "Parzelle": project_details.get("Parzelle", ""),
             "Adresse": project_details.get("Adresse", ""),
             "Projektverfasser": project_details.get("Projektverfasser", ""),
