@@ -19,9 +19,12 @@ def main():
 
         project_name = project.get("name", "Unbekanntes Projekt")
         project_details = project.get("details", {})
-
-        print(f"DEBUG: project = {project}")
-        print(f"DEBUG: project_details = {project_details}")
+        offsets = {
+            "Ostausrichtung": float(project_details.get("Ostausrichtung", 0)),
+            "Nordausrichtung": float(project_details.get("Nordausrichtung", 0)),
+            "Höhe": float(project_details.get("Höhe", 0)),
+            "Nordwinkel": float(project_details.get("Nordwinkel", 0))
+        }
 
         # Step 3: Shortcut Selection
         selected_shortcut = Interface.select_shortcut()
@@ -47,14 +50,20 @@ def main():
 
         # Step 7: Stützen Analysis
         print("Starte Stützenanalyse...")
-        data = Stuetzen.analyze_stuetzen(project_details)
+        data = Stuetzen.analyze_stuetzen(offsets)
         print("Stützenanalyse abgeschlossen.")
 
         # Step 8: PDF Generation
         print("Erstelle PDF...")
-        project_details["Projektname"] = project_name  # Sicherstellen, dass der Projektname übergeben wird
-        headers = ['Element-ID', 'X-Koordinate (VP)', 'Y-Koordinate (VP)', 'Müm (unterster Punkt)', 'Höhe der Stütze']
-        PDF.generate_pdf(output_dir, project_details, headers, data)
+        plankopf_daten = {
+            "Projekt": project_name,
+            "Parzelle": project_details.get("Parzelle", ""),
+            "Adresse": project_details.get("Adresse", ""),
+            "Projektverfasser": project_details.get("Projektverfasser", ""),
+            "Bauherrschaft": project_details.get("Bauherrschaft", "")
+        }
+        headers = ['Element-ID', 'X-Koordinate (VP)', 'Y-Koordinate (VP)', 'MüM (unterster Punkt)', 'Höhe der Stütze']
+        PDF.generate_pdf(output_dir, plankopf_daten, headers, data)
         success_message = f"PDF erfolgreich erstellt und gespeichert in {output_dir}."
         print(success_message)
 

@@ -1,26 +1,14 @@
 {
-    "000-Demoprojekt": {
+    "000-Demo": {
         "details": {
-            "Parzelle": "7756",
-            "Adresse": "Nidelweg 2, Kilchberg",
-            "Projektverfasser": "Moretti",
-            "Bauherrschaft": "Heineken",
+            "Parzelle": "4444",
+            "Adresse": "halo",
+            "Projektverfasser": "Mutschli",
+            "Bauherrschaft": "Sammichlaus",
             "Ostausrichtung": "-2668792.2750",
             "Nordausrichtung": "-1211463.0770",
             "H\u00f6he": "-473.0000",
             "Nordwinkel": "124.188443238791"
-        }
-    },
-    "723-Hausarbeit": {
-        "details": {
-            "Parzelle": "",
-            "Adresse": "",
-            "Projektverfasser": "",
-            "Bauherrschaft": "",
-            "Ostausrichtung": "",
-            "Nordausrichtung": "",
-            "H\u00f6he": "",
-            "Nordwinkel": ""
         }
     }
 }
