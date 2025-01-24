@@ -1,21 +1,38 @@
 {
-    "123-Test": {
-        "name": "123-Test",
+    "777-testo": {
         "details": {
             "Parzelle": "555",
-            "Adresse": "Russgasse 2",
-            "B\u00fcro": "Lofty",
-            "B\u00fcro-Adresse": "Merusweg 4",
-            "Bauherrschaft": {
-                "Name": "Toby Goby",
-                "Adresse": "Seidenweg 1"
-            },
-            "offsets": {
-                "Ostausrichtung": -2668792.275,
-                "Nordausrichtung": -1211463.077,
-                "H\u00f6he": -473.0,
-                "Nordwinkel": 124.188443238791
-            }
+            "Adresse": "nidelbad 6",
+            "Projektverfasser": "Herr Tomatenkopf",
+            "Bauherrschaft": "Bliblu",
+            "Ostausrichtung": "-23333",
+            "Nordausrichtung": "-6644",
+            "H\u00f6he": "-734",
+            "Nordwinkel": "120"
+        }
+    },
+    "uewioa": {
+        "details": {
+            "Parzelle": "dsaf",
+            "Adresse": "",
+            "Projektverfasser": "asfda",
+            "Bauherrschaft": "",
+            "Ostausrichtung": "",
+            "Nordausrichtung": "",
+            "H\u00f6he": "",
+            "Nordwinkel": ""
+        }
+    },
+    "00-pp": {
+        "details": {
+            "Parzelle": "dasfd",
+            "Adresse": "adsfa",
+            "Projektverfasser": "dasf",
+            "Bauherrschaft": "asdf",
+            "Ostausrichtung": "5555",
+            "Nordausrichtung": "5555",
+            "H\u00f6he": "555",
+            "Nordwinkel": "555"
         }
     }
 }

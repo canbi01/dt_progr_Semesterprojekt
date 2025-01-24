@@ -1,14 +1,10 @@
-import customtkinter as ctk
-from tkinter import messagebox, filedialog, Listbox, Canvas
+import tkinter as tk
+from tkinter import messagebox, filedialog, simpledialog, Listbox
 import json
 import os
 
 # File to store projects
 projects_file = "projects.json"
-
-# Set global theme for CustomTkinter
-ctk.set_appearance_mode("Dark")  # Options: "Dark", "Light"
-ctk.set_default_color_theme("dark-blue")  # Modern blue-based theme
 
 # Load projects from file
 def load_projects():
@@ -22,200 +18,216 @@ def save_projects(projects):
     with open(projects_file, "w") as file:
         json.dump(projects, file, indent=4)
 
-# License verification with splash screen animation
 def start_license_verification():
-    license_key = show_login_window()
-    print(f"License Key from Login Window: {license_key}")  # Debugging Output
-    return license_key
+    """Startet die Lizenzprüfung."""
+    root = tk.Tk()
+    root.title("Lizenzprüfung")
+    root.geometry("400x200")
 
-# Show login window for license verification
-def show_login_window():
-    root = ctk.CTk()
-    root.title("AEP - ArchicadEfficiencyProgramm")
-    root.geometry("500x300")
-
-    # Variable to store the license key
-    license_key_var = ctk.StringVar(value="")
+    license_key_var = tk.StringVar()
 
     def verify_license():
-        entered_key = entry_license.get()
-        print(f"Entered License Key: {entered_key}")  # Debugging Output
-        if entered_key == "123456":
-            license_key_var.set(entered_key)  # Set the license key
-            root.destroy()  # Close the window
+        license_key = license_key_var.get()
+        if license_key == "123456":
+            root.destroy()
         else:
             messagebox.showerror("Fehler", "Ungültige Lizenznummer.")
 
-    label_title = ctk.CTkLabel(root, text="Willkommen Zurück!", font=("Roboto", 24))
-    label_title.pack(pady=20)
-
-    label_subtitle = ctk.CTkLabel(root, text="Bitte tragen Sie Ihre Lizenznummer ein.", font=("Roboto", 16))
-    label_subtitle.pack(pady=10)
-
-    entry_license = ctk.CTkEntry(root, placeholder_text="Lizenznummer", width=300, height=40)
-    entry_license.pack(pady=20)
-
-    button_verify = ctk.CTkButton(root, text="Weiter", command=verify_license, corner_radius=10)
-    button_verify.pack(pady=20)
+    tk.Label(root, text="Bitte geben Sie Ihre Lizenznummer ein:", font=("Arial", 14)).pack(pady=10)
+    tk.Entry(root, textvariable=license_key_var, font=("Arial", 12)).pack(pady=10)
+    tk.Button(root, text="Prüfen", command=verify_license).pack(pady=10)
 
     root.mainloop()
-    # Return the value after the window is closed
     return license_key_var.get()
 
-# Project selection
-def select_project():
+def select_project_interface():
+    root = tk.Tk()
+    root.title("AEP - Archicad Efficiency Program")
+    root.geometry("800x600")
+
     projects = load_projects()
+    selected_project = tk.StringVar()
+    current_project = None
 
-    def on_project_select():
+    # Save current project details
+    def save_current_project():
+        if current_project:
+            if current_project not in projects:
+                projects[current_project] = {"details": {}}
+            projects[current_project]["details"]["Parzelle"] = entry_parzelle.get()
+            projects[current_project]["details"]["Adresse"] = entry_adresse.get()
+            projects[current_project]["details"]["Projektverfasser"] = entry_projektverfasser.get()
+            projects[current_project]["details"]["Bauherrschaft"] = entry_bauherrschaft.get()
+            projects[current_project]["details"]["Ostausrichtung"] = entry_ost.get()
+            projects[current_project]["details"]["Nordausrichtung"] = entry_nord.get()
+            projects[current_project]["details"]["Höhe"] = entry_hoehe.get()
+            projects[current_project]["details"]["Nordwinkel"] = entry_nordwinkel.get()
+            save_projects(projects)
+            messagebox.showinfo("Speichern", f"Änderungen für Projekt '{current_project}' wurden gespeichert.")
+
+    # Proceed to shortcut selection
+    def proceed_to_shortcut_selection():
+        if current_project:
+            root.destroy()  # Close the current window
+            messagebox.showinfo("Weiterleitung", f"Weiter zur Shortcut-Auswahl für Projekt '{current_project}'...")
+            selected_project.set(current_project)
+
+    # Load project details into the fields
+    def load_project_details(event):
         nonlocal current_project
-        try:
-            selected_project = project_listbox.get(project_listbox.curselection())
-            current_project = projects.get(selected_project, None)
-            project_window.destroy()
-        except Exception:
-            messagebox.showerror("Fehler", "Bitte ein Projekt auswählen.")
+        selection = project_listbox.curselection()
+        if not selection:
+            return
+        current_project = project_listbox.get(selection)
+        project_details = projects.get(current_project, {}).get("details", {})
+        entry_parzelle.delete(0, tk.END)
+        entry_parzelle.insert(0, project_details.get("Parzelle", ""))
+        entry_adresse.delete(0, tk.END)
+        entry_adresse.insert(0, project_details.get("Adresse", ""))
+        entry_projektverfasser.delete(0, tk.END)
+        entry_projektverfasser.insert(0, project_details.get("Projektverfasser", ""))
+        entry_bauherrschaft.delete(0, tk.END)
+        entry_bauherrschaft.insert(0, project_details.get("Bauherrschaft", ""))
+        entry_ost.delete(0, tk.END)
+        entry_ost.insert(0, project_details.get("Ostausrichtung", ""))
+        entry_nord.delete(0, tk.END)
+        entry_nord.insert(0, project_details.get("Nordausrichtung", ""))
+        entry_hoehe.delete(0, tk.END)
+        entry_hoehe.insert(0, project_details.get("Höhe", ""))
+        entry_nordwinkel.delete(0, tk.END)
+        entry_nordwinkel.insert(0, project_details.get("Nordwinkel", ""))
 
-    def add_project():
-        try:
-            new_project = {
-                "name": entry_project_name.get(),
+    # Create a new project
+    def create_new_project():
+        new_project_name = simpledialog.askstring("Neues Projekt", "Projektname eingeben:")
+        if new_project_name:
+            projects[new_project_name] = {
                 "details": {
-                    "Parzelle": entry_parzelle.get(),
-                    "Adresse": entry_adresse.get(),
-                    "Büro": entry_buero.get(),
-                    "Büro-Adresse": entry_buero_adresse.get(),
-                    "Bauherrschaft": {
-                        "Name": entry_bauherr_name.get(),
-                        "Adresse": entry_bauherr_adresse.get()
-                    },
-                    "offsets": {
-                        "Ostausrichtung": float(entry_ost.get()),
-                        "Nordausrichtung": float(entry_nord.get()),
-                        "Höhe": float(entry_hoehe.get()),
-                        "Nordwinkel": float(entry_nordwinkel.get())
-                    }
+                    "Parzelle": "",
+                    "Adresse": "",
+                    "Projektverfasser": "",
+                    "Bauherrschaft": "",
+                    "Ostausrichtung": "",
+                    "Nordausrichtung": "",
+                    "Höhe": "",
+                    "Nordwinkel": "",
                 }
             }
-            projects[new_project["name"]] = new_project
             save_projects(projects)
-            project_listbox.insert("end", new_project["name"])
-        except ValueError:
-            messagebox.showerror("Fehler", "Bitte alle Felder korrekt ausfüllen.")
+            project_listbox.insert(tk.END, new_project_name)
 
-    current_project = None
-    project_window = ctk.CTk()
-    project_window.title("Projekte")
-    project_window.geometry("600x500")
+    # Left-side project list
+    frame_left = tk.Frame(root, width=200, padx=10, pady=10)
+    frame_left.pack(side=tk.LEFT, fill=tk.Y)
 
-    label_projects = ctk.CTkLabel(project_window, text="Wählen Sie ein Projekt aus oder erstellen Sie ein Neues.", font=("Roboto", 18))
-    label_projects.pack(pady=20)
-
-    project_listbox = Listbox(project_window, bg="#1E1E2E", fg="#FFFFFF", highlightbackground="#4CAF50", font=("Roboto", 12), width=50, height=10)
+    project_listbox = Listbox(frame_left, height=25)
+    project_listbox.pack(fill=tk.BOTH, expand=True)
     for project in projects.keys():
-        project_listbox.insert("end", project)
-    project_listbox.pack(pady=20)
+        project_listbox.insert(tk.END, project)
+    project_listbox.bind("<<ListboxSelect>>", load_project_details)
 
-    button_select = ctk.CTkButton(project_window, text="Projekt auswählen", command=on_project_select, corner_radius=10)
-    button_select.pack(pady=10)
+    btn_new_project = tk.Button(frame_left, text="Neues Projekt", command=create_new_project)
+    btn_new_project.pack(pady=10)
 
-    frame_add_project = ctk.CTkFrame(project_window)
-    frame_add_project.pack(pady=20, padx=20)
+    # Right-side project details
+    frame_right = tk.Frame(root, padx=10, pady=10)
+    frame_right.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-    label_add_project = ctk.CTkLabel(frame_add_project, text="Neues Projekt erstellen", font=("Roboto", 16))
-    label_add_project.pack(pady=10)
+    tk.Label(frame_right, text="Projekt-Infos", font=("Arial", 16)).grid(row=0, column=0, columnspan=2, pady=10)
 
-    entry_project_name = ctk.CTkEntry(frame_add_project, placeholder_text="Projektname", width=300)
-    entry_project_name.pack(pady=5)
-    entry_parzelle = ctk.CTkEntry(frame_add_project, placeholder_text="Parzelle", width=300)
-    entry_parzelle.pack(pady=5)
-    entry_adresse = ctk.CTkEntry(frame_add_project, placeholder_text="Adresse", width=300)
-    entry_adresse.pack(pady=5)
-    entry_buero = ctk.CTkEntry(frame_add_project, placeholder_text="Büro", width=300)
-    entry_buero.pack(pady=5)
-    entry_buero_adresse = ctk.CTkEntry(frame_add_project, placeholder_text="Büro-Adresse", width=300)
-    entry_buero_adresse.pack(pady=5)
-    entry_bauherr_name = ctk.CTkEntry(frame_add_project, placeholder_text="Bauherr Name", width=300)
-    entry_bauherr_name.pack(pady=5)
-    entry_bauherr_adresse = ctk.CTkEntry(frame_add_project, placeholder_text="Bauherr Adresse", width=300)
-    entry_bauherr_adresse.pack(pady=5)
+    tk.Label(frame_right, text="Parzelle:").grid(row=1, column=0, sticky=tk.W)
+    entry_parzelle = tk.Entry(frame_right, width=50)
+    entry_parzelle.grid(row=1, column=1)
 
-    entry_ost = ctk.CTkEntry(frame_add_project, placeholder_text="Ostausrichtung", width=300)
-    entry_ost.pack(pady=5)
-    entry_nord = ctk.CTkEntry(frame_add_project, placeholder_text="Nordausrichtung", width=300)
-    entry_nord.pack(pady=5)
-    entry_hoehe = ctk.CTkEntry(frame_add_project, placeholder_text="Höhe", width=300)
-    entry_hoehe.pack(pady=5)
-    entry_nordwinkel = ctk.CTkEntry(frame_add_project, placeholder_text="Nordwinkel", width=300)
-    entry_nordwinkel.pack(pady=5)
+    tk.Label(frame_right, text="Adresse:").grid(row=2, column=0, sticky=tk.W)
+    entry_adresse = tk.Entry(frame_right, width=50)
+    entry_adresse.grid(row=2, column=1)
 
-    button_add_project = ctk.CTkButton(frame_add_project, text="Projekt hinzufügen", command=add_project, corner_radius=10)
-    button_add_project.pack(pady=10)
+    tk.Label(frame_right, text="Projektverfasser:").grid(row=3, column=0, sticky=tk.W)
+    entry_projektverfasser = tk.Entry(frame_right, width=50)
+    entry_projektverfasser.grid(row=3, column=1)
 
-    project_window.mainloop()
+    tk.Label(frame_right, text="Bauherrschaft:").grid(row=4, column=0, sticky=tk.W)
+    entry_bauherrschaft = tk.Entry(frame_right, width=50)
+    entry_bauherrschaft.grid(row=4, column=1)
 
-    return current_project
+    tk.Label(frame_right, text="Ostausrichtung:").grid(row=5, column=0, sticky=tk.W)
+    entry_ost = tk.Entry(frame_right, width=50)
+    entry_ost.grid(row=5, column=1)
 
-# Select a shortcut
+    tk.Label(frame_right, text="Nordausrichtung:").grid(row=6, column=0, sticky=tk.W)
+    entry_nord = tk.Entry(frame_right, width=50)
+    entry_nord.grid(row=6, column=1)
+
+    tk.Label(frame_right, text="Höhe:").grid(row=7, column=0, sticky=tk.W)
+    entry_hoehe = tk.Entry(frame_right, width=50)
+    entry_hoehe.grid(row=7, column=1)
+
+    tk.Label(frame_right, text="Nordwinkel:").grid(row=8, column=0, sticky=tk.W)
+    entry_nordwinkel = tk.Entry(frame_right, width=50)
+    entry_nordwinkel.grid(row=8, column=1)
+
+    btn_save_project = tk.Button(frame_right, text="Speichern", command=save_current_project)
+    btn_save_project.grid(row=9, column=0, columnspan=2, pady=10)
+
+    btn_proceed = tk.Button(frame_right, text="Weiter", command=proceed_to_shortcut_selection)
+    btn_proceed.grid(row=10, column=0, columnspan=2, pady=10)
+
+    root.mainloop()
+
+    return projects.get(selected_project.get(), None)
+
 def select_shortcut():
-    shortcuts = ["Ausmass Baugespann", "...coming soon..."]
-    selected_shortcut = None
+    """Zeigt ein Fenster zur Auswahl eines Shortcuts."""
+    root = tk.Tk()
+    root.title("Shortcut auswählen")
+    root.geometry("400x300")
 
-    def on_select():
-        nonlocal selected_shortcut
-        try:
-            selected_shortcut = shortcut_listbox.get(shortcut_listbox.curselection())
-            shortcut_window.destroy()
-        except Exception:
-            messagebox.showerror("Fehler", "Bitte einen Shortcut auswählen.")
+    selected_shortcut = tk.StringVar(value="")
 
-    shortcut_window = ctk.CTk()
-    shortcut_window.title("Shortcut auswählen")
-    shortcut_window.geometry("400x300")
+    def confirm_selection():
+        if shortcut_listbox.curselection():
+            selected_shortcut.set(shortcut_listbox.get(shortcut_listbox.curselection()))
+            root.destroy()
+        else:
+            messagebox.showerror("Fehler", "Bitte wählen Sie einen Shortcut aus.")
 
-    label_shortcuts = ctk.CTkLabel(shortcut_window, text="Wählen Sie einen AEP-Shortcut aus.", font=("Roboto", 16))
-    label_shortcuts.pack(pady=20)
+    tk.Label(root, text="Wählen Sie einen Shortcut aus:", font=("Arial", 14)).pack(pady=10)
 
-    shortcut_listbox = Listbox(shortcut_window, bg="#1E1E2E", fg="#FFFFFF", highlightbackground="#4CAF50", font=("Roboto", 12), width=40, height=5)
+    shortcuts = ["Ausmass Baugespann", "Andere Funktion (zukünftig)"]
+    shortcut_listbox = tk.Listbox(root, selectmode=tk.SINGLE)
     for shortcut in shortcuts:
-        shortcut_listbox.insert("end", shortcut)
-    shortcut_listbox.pack(pady=20)
+        shortcut_listbox.insert(tk.END, shortcut)
+    shortcut_listbox.pack(pady=10, fill=tk.BOTH, expand=True)
 
-    button_select = ctk.CTkButton(shortcut_window, text="Weiter", command=on_select, corner_radius=10)
-    button_select.pack(pady=20)
+    tk.Button(root, text="Weiter", command=confirm_selection).pack(pady=10)
 
-    shortcut_window.mainloop()
+    root.mainloop()
+    return selected_shortcut.get()
 
-    return selected_shortcut
-
-# Error display
 def show_error(message):
+    """Zeigt eine Fehlermeldung in einem Popup-Fenster an."""
     messagebox.showerror("Fehler", message)
 
-# Instructions display
-def show_analysis_instructions(project_name):
-    instruction_window = ctk.CTk()
-    instruction_window.title("Anweisungen")
-    instruction_window.geometry("500x400")
-
-    label_instructions = ctk.CTkLabel(
-        instruction_window,
-        text=(
-            f"Öffnen Sie die Archicad-Datei für Projekt {project_name} und folgen Sie diesen Anweisungen:\n\n"
-            "1. Navigieren Sie ins 3D-Fenster.\n"
-            "2. Öffnen Sie das Stützenwerkzeug und setzen Sie die Element-ID 'Baugespann'.\n"
-            "3. Platzieren Sie die Stützen an den gewünschten Stellen."
-        ),
-        font=("Roboto", 16),
-        justify="left",
-        wraplength=450
-    )
-    label_instructions.pack(pady=20)
-
-    button_continue = ctk.CTkButton(instruction_window, text="Weiter", command=instruction_window.destroy, corner_radius=10)
-    button_continue.pack(pady=20)
-
-    instruction_window.mainloop()
-
-# Output directory selection
 def select_output_directory():
+    """Startet die Auswahl eines Zielverzeichnisses."""
     return filedialog.askdirectory(title="Zielverzeichnis wählen")
+
+def show_analysis_instructions(project_name):
+    """Zeigt Anweisungen zur Analyse an."""
+    root = tk.Tk()
+    root.title("Anweisungen")
+    root.geometry("400x300")
+
+    instructions = (
+        f"Öffnen Sie die Archicad-Datei für Projekt {project_name} und folgen Sie diesen Anweisungen:\n\n"
+        "1. Navigieren Sie ins 3D-Fenster.\n"
+        "2. Öffnen Sie das Stützenwerkzeug und setzen Sie die Element-ID 'Baugespann'.\n"
+        "3. Platzieren Sie die Stützen an den gewünschten Stellen."
+    )
+
+    tk.Label(root, text=instructions, wraplength=380, justify="left", font=("Arial", 12)).pack(pady=10)
+
+    tk.Button(root, text="Weiter", command=root.destroy).pack(pady=10)
+
+    root.mainloop()

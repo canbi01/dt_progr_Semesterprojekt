@@ -8,7 +8,7 @@ def generate_pdf(output_dir, project_details, headers, data):
     Create a PDF report based on analyzed data and save it to the specified directory.
 
     :param output_dir: Target directory for the PDF
-    :param project_details: Information about the selected project
+    :param project_details: Information about the selected project (expected as a dictionary)
     :param headers: Column headers for the table
     :param data: Table data
     """
@@ -16,6 +16,14 @@ def generate_pdf(output_dir, project_details, headers, data):
         # Ensure output directory exists
         if not os.path.exists(output_dir):
             raise RuntimeError(f"Output directory does not exist: {output_dir}")
+
+        # Debug: Check project_details type
+        if not isinstance(project_details, dict):
+            raise ValueError(f"project_details must be a dictionary, but got {type(project_details)} with value: {project_details}")
+
+        # Validate project_details structure
+        if not isinstance(project_details, dict):
+            raise ValueError("project_details must be a dictionary.")
 
         # Generate PDF file name
         project_name = project_details.get("Projekt", "Unbekanntes_Projekt")
@@ -31,14 +39,23 @@ def generate_pdf(output_dir, project_details, headers, data):
         pdf.setFont("Helvetica-Bold", 12)
         pdf.drawString(50, plankopf_start_y, "Projektdaten")
 
+        # Handle missing sub-dictionaries gracefully
+        bauherrschaft = project_details.get("Bauherrschaft", {})
+        if isinstance(bauherrschaft, str):
+            bauherrschaft = {}
+
+        offsets = project_details.get("offsets", {})
+        if isinstance(offsets, str):
+            offsets = {}
+
         plankopf_data = [
             ("Projekt:", project_details.get("Projekt", "N/A")),
             ("Parzelle:", project_details.get("Parzelle", "N/A")),
             ("Adresse:", project_details.get("Adresse", "N/A")),
             ("Büro:", project_details.get("Büro", "N/A")),
             ("Büro-Adresse:", project_details.get("Büro-Adresse", "N/A")),
-            ("Bauherrschaft:", project_details.get("Bauherrschaft", {}).get("Name", "N/A")),
-            ("Bauherr-Adresse:", project_details.get("Bauherrschaft", {}).get("Adresse", "N/A")),
+            ("Bauherrschaft:", bauherrschaft.get("Name", "N/A")),
+            ("Bauherr-Adresse:", bauherrschaft.get("Adresse", "N/A")),
         ]
 
         y_position = plankopf_start_y - 20
@@ -46,15 +63,15 @@ def generate_pdf(output_dir, project_details, headers, data):
             pdf.setFont("Helvetica-Bold", 10)
             pdf.drawString(50, y_position, label)
             pdf.setFont("Helvetica", 10)
-            pdf.drawString(150, y_position, value)
+            pdf.drawString(150, y_position, str(value))
             y_position -= 15
 
         # Add georeferencing data
         geo_data = [
-            ("Ostausrichtung:", project_details.get("offsets", {}).get("Ostausrichtung", 0.0)),
-            ("Nordausrichtung:", project_details.get("offsets", {}).get("Nordausrichtung", 0.0)),
-            ("Höhe:", project_details.get("offsets", {}).get("Höhe", 0.0)),
-            ("Nordwinkel:", f"{project_details.get('offsets', {}).get('Nordwinkel', 0.0)}°"),
+            ("Ostausrichtung:", offsets.get("Ostausrichtung", 0.0)),
+            ("Nordausrichtung:", offsets.get("Nordausrichtung", 0.0)),
+            ("Höhe:", offsets.get("Höhe", 0.0)),
+            ("Nordwinkel:", f"{offsets.get('Nordwinkel', 0.0)}°"),
         ]
 
         pdf.setFont("Helvetica-Bold", 12)

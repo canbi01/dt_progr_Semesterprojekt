@@ -13,12 +13,16 @@ def main():
             raise RuntimeError("Ungültige Lizenznummer. Das Programm wird beendet.")
 
         # Step 2: Project Selection
-        project = Interface.select_project()
+        project = Interface.select_project_interface()
         if not project:
             raise RuntimeError("Kein Projekt ausgewählt. Bitte starten Sie das Programm neu.")
 
         project_name = project.get("name", "Unbekanntes Projekt")
-        offsets = project.get("details", {}).get("offsets", {})
+        project_details = project.get("details", {})
+        offsets = project_details.get("offsets", {})
+
+        print(f"DEBUG: project = {project}")
+        print(f"DEBUG: project_details = {project_details}")
 
         # Step 3: Shortcut Selection
         selected_shortcut = Interface.select_shortcut()
@@ -49,7 +53,19 @@ def main():
 
         # Step 8: PDF Generation
         print("Erstelle PDF...")
-        plankopf_daten = project.get("details", {})
+        plankopf_daten = {
+            "Projekt": project_name,
+            "Parzelle": project_details.get("Parzelle", "N/A"),
+            "Adresse": project_details.get("Adresse", "N/A"),
+            "Projektverfasser": project_details.get("Projektverfasser", "N/A"),
+            "Bauherrschaft": project_details.get("Bauherrschaft", "N/A"),
+            "offsets": {
+                "Ostausrichtung": offsets.get("Ostausrichtung", 0),
+                "Nordausrichtung": offsets.get("Nordausrichtung", 0),
+                "Höhe": offsets.get("Höhe", 0),
+                "Nordwinkel": offsets.get("Nordwinkel", 0),
+            },
+        }
         headers = ['Element-ID', 'X-Koordinate (VP)', 'Y-Koordinate (VP)', 'MüM (unterster Punkt)', 'Höhe der Stütze']
         PDF.generate_pdf(output_dir, plankopf_daten, headers, data)
         success_message = f"PDF erfolgreich erstellt und gespeichert in {output_dir}."
@@ -61,7 +77,7 @@ def main():
         print("Programm erfolgreich abgeschlossen.")
 
     except Exception as e:
-        Interface.show_error(f"Ein Fehler ist aufgetreten: {e}")
+        messagebox.showerror("Fehler", f"Ein Fehler ist aufgetreten: {e}")
 
 if __name__ == "__main__":
     main()
