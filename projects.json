@@ -1,26 +1,14 @@
 {
-    "000-Demo": {
+    "241207-Beispielprojekt": {
         "details": {
-            "Parzelle": "7856",
-            "Adresse": "Bleistifweg 22, 6004 Hergiswil",
-            "Projektverfasser": "Thomas Trampeltier",
-            "Bauherrschaft": "Bruder Jakob",
+            "Parzelle": "123",
+            "Adresse": "Beispielweg 2",
+            "Projektverfasser": "Max Muster",
+            "Bauherrschaft": "Ruedi R\u00fcssel",
             "Ostausrichtung": "-2668792.2750",
             "Nordausrichtung": "-1211463.0770",
             "H\u00f6he": "-473.0000",
             "Nordwinkel": "124.188443238791"
-        }
-    },
-    "000-Test2": {
-        "details": {
-            "Parzelle": "4444",
-            "Adresse": "Steinibachweg 13, 6708 H\u00fctten",
-            "Projektverfasser": "Hans Hofer",
-            "Bauherrschaft": "HSLU",
-            "Ostausrichtung": "1",
-            "Nordausrichtung": "1",
-            "H\u00f6he": "1",
-            "Nordwinkel": "1"
         }
     }
 }

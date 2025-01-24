@@ -20,7 +20,7 @@ def save_projects(projects):
 
 # Add "AEP" logo at the top right of each window
 def add_aep_logo(window):
-    logo_label = tk.Label(window, text="AEP", font=("Arial", 20, "bold"), fg="black")
+    logo_label = tk.Label(window, text="AEP", font=("Arial", 20, "bold"), fg="white")
     logo_label.pack(side=tk.TOP, anchor=tk.NE, padx=10, pady=10)
 
 def start_license_verification():
