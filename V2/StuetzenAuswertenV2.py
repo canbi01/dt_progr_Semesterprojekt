@@ -21,7 +21,10 @@ def transform_coordinates(x, y, north_angle):
 
 def analyze_stuetzen(project_offsets):
     try:
+        # Lade Offsets
         offsets = load_offsets(project_offsets)
+        
+        # Verbindung zu Archicad herstellen
         conn = ACConnection.connect()
         if not conn:
             raise RuntimeError("Keine Verbindung zu Archicad möglich.")
@@ -29,31 +32,40 @@ def analyze_stuetzen(project_offsets):
         acc = conn.commands
         acu = conn.utilities
 
+        # Stützen (Columns) abrufen
         columns = acc.GetElementsByType("Column")
         if not columns:
             raise RuntimeError("Keine Stützen gefunden.")
 
+        # Property-ID für Element-IDs abrufen
         element_id_property_id = acu.GetBuiltInPropertyId('General_ElementID')
         property_values = acc.GetPropertyValuesOfElements(columns, [element_id_property_id])
         bounding_boxes = acc.Get3DBoundingBoxes(columns)
 
+        # Akzeptierte Element-IDs
+        accepted_ids = {"Baugespann", "baugespan", "Baugespan", "baugespann"}
+        
         data = []
         for prop, bounding_box in zip(property_values, bounding_boxes):
             element_id = prop.propertyValues[0].propertyValue.value
-            if element_id != "Baugespann":
+            if element_id not in accepted_ids:  # Prüfe auf akzeptierte IDs
                 continue
 
+            # Lokale Koordinaten berechnen
             local_x = (bounding_box.boundingBox3D.xMin + bounding_box.boundingBox3D.xMax) / 2
             local_y = (bounding_box.boundingBox3D.yMin + bounding_box.boundingBox3D.yMax) / 2
 
+            # Globale Koordinaten mit Nordwinkel transformieren
             global_x, global_y = transform_coordinates(local_x, local_y, offsets["SURVEY_NORDWINKELOFFSET"])
 
+            # Offset anwenden
             x_coord = round(global_x - offsets["SURVEY_POINT_OFFSET_X"], 2)
             y_coord = round(global_y - offsets["SURVEY_POINT_OFFSET_Y"], 2)
             z_min = round(bounding_box.boundingBox3D.zMin - offsets["SURVEY_POINT_OFFSET_Z"], 2)
             z_max = round(bounding_box.boundingBox3D.zMax - offsets["SURVEY_POINT_OFFSET_Z"], 2)
             height = round(z_max - z_min, 2)
 
+            # Daten hinzufügen
             data.append([element_id, x_coord, y_coord, z_min, height])
 
         if not data:
