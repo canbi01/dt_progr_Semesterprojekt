@@ -19,7 +19,6 @@ def main():
 
         project_name = project.get("name", "Unbekanntes Projekt")
         project_details = project.get("details", {})
-        offsets = project_details.get("offsets", {})
 
         print(f"DEBUG: project = {project}")
         print(f"DEBUG: project_details = {project_details}")
@@ -48,26 +47,14 @@ def main():
 
         # Step 7: Stützen Analysis
         print("Starte Stützenanalyse...")
-        data = Stuetzen.analyze_stuetzen(offsets)
+        data = Stuetzen.analyze_stuetzen(project_details)
         print("Stützenanalyse abgeschlossen.")
 
         # Step 8: PDF Generation
         print("Erstelle PDF...")
-        plankopf_daten = {
-            "Projekt": project_name,
-            "Parzelle": project_details.get("Parzelle", "N/A"),
-            "Adresse": project_details.get("Adresse", "N/A"),
-            "Projektverfasser": project_details.get("Projektverfasser", "N/A"),
-            "Bauherrschaft": project_details.get("Bauherrschaft", "N/A"),
-            "offsets": {
-                "Ostausrichtung": offsets.get("Ostausrichtung", 0),
-                "Nordausrichtung": offsets.get("Nordausrichtung", 0),
-                "Höhe": offsets.get("Höhe", 0),
-                "Nordwinkel": offsets.get("Nordwinkel", 0),
-            },
-        }
-        headers = ['Element-ID', 'X-Koordinate (VP)', 'Y-Koordinate (VP)', 'MüM (unterster Punkt)', 'Höhe der Stütze']
-        PDF.generate_pdf(output_dir, plankopf_daten, headers, data)
+        project_details["Projektname"] = project_name  # Sicherstellen, dass der Projektname übergeben wird
+        headers = ['Element-ID', 'X-Koordinate (VP)', 'Y-Koordinate (VP)', 'Müm (unterster Punkt)', 'Höhe der Stütze']
+        PDF.generate_pdf(output_dir, project_details, headers, data)
         success_message = f"PDF erfolgreich erstellt und gespeichert in {output_dir}."
         print(success_message)
 

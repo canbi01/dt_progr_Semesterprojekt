@@ -1,38 +1,26 @@
 {
-    "777-testo": {
+    "000-Demoprojekt": {
         "details": {
-            "Parzelle": "555",
-            "Adresse": "nidelbad 6",
-            "Projektverfasser": "Herr Tomatenkopf",
-            "Bauherrschaft": "Bliblu",
-            "Ostausrichtung": "-23333",
-            "Nordausrichtung": "-6644",
-            "H\u00f6he": "-734",
-            "Nordwinkel": "120"
+            "Parzelle": "7756",
+            "Adresse": "Nidelweg 2, Kilchberg",
+            "Projektverfasser": "Moretti",
+            "Bauherrschaft": "Heineken",
+            "Ostausrichtung": "-2668792.2750",
+            "Nordausrichtung": "-1211463.0770",
+            "H\u00f6he": "-473.0000",
+            "Nordwinkel": "124.188443238791"
         }
     },
-    "uewioa": {
+    "723-Hausarbeit": {
         "details": {
-            "Parzelle": "dsaf",
+            "Parzelle": "",
             "Adresse": "",
-            "Projektverfasser": "asfda",
+            "Projektverfasser": "",
             "Bauherrschaft": "",
             "Ostausrichtung": "",
             "Nordausrichtung": "",
             "H\u00f6he": "",
             "Nordwinkel": ""
-        }
-    },
-    "00-pp": {
-        "details": {
-            "Parzelle": "dasfd",
-            "Adresse": "adsfa",
-            "Projektverfasser": "dasf",
-            "Bauherrschaft": "asdf",
-            "Ostausrichtung": "5555",
-            "Nordausrichtung": "5555",
-            "H\u00f6he": "555",
-            "Nordwinkel": "555"
         }
     }
 }

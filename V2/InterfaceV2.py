@@ -52,8 +52,6 @@ def select_project_interface():
     # Save current project details
     def save_current_project():
         if current_project:
-            if current_project not in projects:
-                projects[current_project] = {"details": {}}
             projects[current_project]["details"]["Parzelle"] = entry_parzelle.get()
             projects[current_project]["details"]["Adresse"] = entry_adresse.get()
             projects[current_project]["details"]["Projektverfasser"] = entry_projektverfasser.get()
@@ -177,6 +175,8 @@ def select_project_interface():
 
     return projects.get(selected_project.get(), None)
 
+# The rest of the functions (select_shortcut, show_error, etc.) remain the same.
+
 def select_shortcut():
     """Zeigt ein Fenster zur Auswahl eines Shortcuts."""
     root = tk.Tk()
@@ -220,9 +220,9 @@ def show_analysis_instructions(project_name):
     root.geometry("400x300")
 
     instructions = (
-        f"Öffnen Sie die Archicad-Datei für Projekt {project_name} und folgen Sie diesen Anweisungen:\n\n"
+        f"\u00d6ffnen Sie die Archicad-Datei für Projekt {project_name} und folgen Sie diesen Anweisungen:\n\n"
         "1. Navigieren Sie ins 3D-Fenster.\n"
-        "2. Öffnen Sie das Stützenwerkzeug und setzen Sie die Element-ID 'Baugespann'.\n"
+        "2. \u00d6ffnen Sie das Stützenwerkzeug und setzen Sie die Element-ID 'Baugespann'.\n"
         "3. Platzieren Sie die Stützen an den gewünschten Stellen."
     )
 

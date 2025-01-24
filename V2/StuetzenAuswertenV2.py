@@ -2,13 +2,13 @@ from archicad import ACConnection
 import math
 
 # Load offsets from project details
-def load_offsets(project_offsets):
+def load_offsets(project_details):
     try:
         offsets = {
-            "SURVEY_POINT_OFFSET_X": float(project_offsets.get("Ostausrichtung", 0.0)),
-            "SURVEY_POINT_OFFSET_Y": float(project_offsets.get("Nordausrichtung", 0.0)),
-            "SURVEY_POINT_OFFSET_Z": float(project_offsets.get("Höhe", 0.0)),
-            "SURVEY_NORDWINKELOFFSET": float(project_offsets.get("Nordwinkel", 0.0)),
+            "SURVEY_POINT_OFFSET_X": float(project_details.get("Ostausrichtung", 0.0)),
+            "SURVEY_POINT_OFFSET_Y": float(project_details.get("Nordausrichtung", 0.0)),
+            "SURVEY_POINT_OFFSET_Z": float(project_details.get("Höhe", 0.0)),
+            "SURVEY_NORDWINKELOFFSET": float(project_details.get("Nordwinkel", 0.0)),
         }
         return offsets
     except Exception as e:
@@ -22,10 +22,10 @@ def transform_coordinates(x, y, north_angle):
     return transformed_x, transformed_y
 
 # Analyze columns (Stützen) in Archicad
-def analyze_stuetzen(project_offsets):
+def analyze_stuetzen(project_details):
     try:
         # Load offsets
-        offsets = load_offsets(project_offsets)
+        offsets = load_offsets(project_details)
         SURVEY_POINT_OFFSET_X = offsets["SURVEY_POINT_OFFSET_X"]
         SURVEY_POINT_OFFSET_Y = offsets["SURVEY_POINT_OFFSET_Y"]
         SURVEY_POINT_OFFSET_Z = offsets["SURVEY_POINT_OFFSET_Z"]
