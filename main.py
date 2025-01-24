@@ -3,6 +3,7 @@ from archicad import ACConnection
 import V2.InterfaceV2 as Interface
 import V2.StuetzenAuswertenV2 as Stuetzen
 import V2.pdfGeneratorV2 as PDF
+from tkinter import messagebox
 
 def main():
     try:
@@ -51,7 +52,11 @@ def main():
         plankopf_daten = project.get("details", {})
         headers = ['Element-ID', 'X-Koordinate (VP)', 'Y-Koordinate (VP)', 'MüM (unterster Punkt)', 'Höhe der Stütze']
         PDF.generate_pdf(output_dir, plankopf_daten, headers, data)
-        print(f"PDF erfolgreich erstellt und gespeichert in {output_dir}.")
+        success_message = f"PDF erfolgreich erstellt und gespeichert in {output_dir}."
+        print(success_message)
+
+        # Show success message in a popup
+        messagebox.showinfo("PDF-Erstellung", success_message)
 
         print("Programm erfolgreich abgeschlossen.")
 

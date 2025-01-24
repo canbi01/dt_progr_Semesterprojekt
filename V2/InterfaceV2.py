@@ -1,10 +1,14 @@
 import customtkinter as ctk
-from tkinter import messagebox, filedialog, Listbox
+from tkinter import messagebox, filedialog, Listbox, Canvas
 import json
 import os
 
 # File to store projects
 projects_file = "projects.json"
+
+# Set global theme for CustomTkinter
+ctk.set_appearance_mode("Dark")  # Options: "Dark", "Light"
+ctk.set_default_color_theme("dark-blue")  # Modern blue-based theme
 
 # Load projects from file
 def load_projects():
@@ -18,36 +22,45 @@ def save_projects(projects):
     with open(projects_file, "w") as file:
         json.dump(projects, file, indent=4)
 
-# License verification
+# License verification with splash screen animation
 def start_license_verification():
-    root = ctk.CTk()
-    root.title("AEP-ArchicadEfficiencyProgramm")
-    root.geometry("400x200")
+    license_key = show_login_window()
+    print(f"License Key from Login Window: {license_key}")  # Debugging Output
+    return license_key
 
-    license_key = None
+# Show login window for license verification
+def show_login_window():
+    root = ctk.CTk()
+    root.title("AEP - ArchicadEfficiencyProgramm")
+    root.geometry("500x300")
+
+    # Variable to store the license key
+    license_key_var = ctk.StringVar(value="")
 
     def verify_license():
-        nonlocal license_key
-        license_key = entry_license.get()
-        if license_key == "123456":
-            root.destroy()
+        entered_key = entry_license.get()
+        print(f"Entered License Key: {entered_key}")  # Debugging Output
+        if entered_key == "123456":
+            license_key_var.set(entered_key)  # Set the license key
+            root.destroy()  # Close the window
         else:
             messagebox.showerror("Fehler", "Ungültige Lizenznummer.")
 
-    label_title = ctk.CTkLabel(root, text="Willkommen Zurück!", font=("Arial", 20))
-    label_title.pack(pady=10)
+    label_title = ctk.CTkLabel(root, text="Willkommen Zurück!", font=("Roboto", 24))
+    label_title.pack(pady=20)
 
-    label_subtitle = ctk.CTkLabel(root, text="Bitte tragen Sie Ihre Lizenznummer ein.", font=("Arial", 14))
-    label_subtitle.pack(pady=5)
+    label_subtitle = ctk.CTkLabel(root, text="Bitte tragen Sie Ihre Lizenznummer ein.", font=("Roboto", 16))
+    label_subtitle.pack(pady=10)
 
-    entry_license = ctk.CTkEntry(root, placeholder_text="Lizenznummer")
-    entry_license.pack(pady=10)
+    entry_license = ctk.CTkEntry(root, placeholder_text="Lizenznummer", width=300, height=40)
+    entry_license.pack(pady=20)
 
-    button_verify = ctk.CTkButton(root, text="Weiter", command=verify_license)
-    button_verify.pack(pady=10)
+    button_verify = ctk.CTkButton(root, text="Weiter", command=verify_license, corner_radius=10)
+    button_verify.pack(pady=20)
 
     root.mainloop()
-    return license_key
+    # Return the value after the window is closed
+    return license_key_var.get()
 
 # Project selection
 def select_project():
@@ -92,51 +105,51 @@ def select_project():
     current_project = None
     project_window = ctk.CTk()
     project_window.title("Projekte")
-    project_window.geometry("600x400")
+    project_window.geometry("600x500")
 
-    label_projects = ctk.CTkLabel(project_window, text="Wählen Sie ein Projekt aus oder erstellen Sie ein Neues.", font=("Arial", 16))
-    label_projects.pack(pady=10)
+    label_projects = ctk.CTkLabel(project_window, text="Wählen Sie ein Projekt aus oder erstellen Sie ein Neues.", font=("Roboto", 18))
+    label_projects.pack(pady=20)
 
-    project_listbox = Listbox(project_window)
+    project_listbox = Listbox(project_window, bg="#1E1E2E", fg="#FFFFFF", highlightbackground="#4CAF50", font=("Roboto", 12), width=50, height=10)
     for project in projects.keys():
         project_listbox.insert("end", project)
-    project_listbox.pack(pady=10)
+    project_listbox.pack(pady=20)
 
-    button_select = ctk.CTkButton(project_window, text="Projekt auswählen", command=on_project_select)
+    button_select = ctk.CTkButton(project_window, text="Projekt auswählen", command=on_project_select, corner_radius=10)
     button_select.pack(pady=10)
 
     frame_add_project = ctk.CTkFrame(project_window)
-    frame_add_project.pack(pady=10, padx=10)
+    frame_add_project.pack(pady=20, padx=20)
 
-    label_add_project = ctk.CTkLabel(frame_add_project, text="Neues Projekt erstellen", font=("Arial", 14))
-    label_add_project.pack(pady=5)
+    label_add_project = ctk.CTkLabel(frame_add_project, text="Neues Projekt erstellen", font=("Roboto", 16))
+    label_add_project.pack(pady=10)
 
-    entry_project_name = ctk.CTkEntry(frame_add_project, placeholder_text="Projektname")
+    entry_project_name = ctk.CTkEntry(frame_add_project, placeholder_text="Projektname", width=300)
     entry_project_name.pack(pady=5)
-    entry_parzelle = ctk.CTkEntry(frame_add_project, placeholder_text="Parzelle")
+    entry_parzelle = ctk.CTkEntry(frame_add_project, placeholder_text="Parzelle", width=300)
     entry_parzelle.pack(pady=5)
-    entry_adresse = ctk.CTkEntry(frame_add_project, placeholder_text="Adresse")
+    entry_adresse = ctk.CTkEntry(frame_add_project, placeholder_text="Adresse", width=300)
     entry_adresse.pack(pady=5)
-    entry_buero = ctk.CTkEntry(frame_add_project, placeholder_text="Büro")
+    entry_buero = ctk.CTkEntry(frame_add_project, placeholder_text="Büro", width=300)
     entry_buero.pack(pady=5)
-    entry_buero_adresse = ctk.CTkEntry(frame_add_project, placeholder_text="Büro-Adresse")
+    entry_buero_adresse = ctk.CTkEntry(frame_add_project, placeholder_text="Büro-Adresse", width=300)
     entry_buero_adresse.pack(pady=5)
-    entry_bauherr_name = ctk.CTkEntry(frame_add_project, placeholder_text="Bauherr Name")
+    entry_bauherr_name = ctk.CTkEntry(frame_add_project, placeholder_text="Bauherr Name", width=300)
     entry_bauherr_name.pack(pady=5)
-    entry_bauherr_adresse = ctk.CTkEntry(frame_add_project, placeholder_text="Bauherr Adresse")
+    entry_bauherr_adresse = ctk.CTkEntry(frame_add_project, placeholder_text="Bauherr Adresse", width=300)
     entry_bauherr_adresse.pack(pady=5)
 
-    entry_ost = ctk.CTkEntry(frame_add_project, placeholder_text="Ostausrichtung")
+    entry_ost = ctk.CTkEntry(frame_add_project, placeholder_text="Ostausrichtung", width=300)
     entry_ost.pack(pady=5)
-    entry_nord = ctk.CTkEntry(frame_add_project, placeholder_text="Nordausrichtung")
+    entry_nord = ctk.CTkEntry(frame_add_project, placeholder_text="Nordausrichtung", width=300)
     entry_nord.pack(pady=5)
-    entry_hoehe = ctk.CTkEntry(frame_add_project, placeholder_text="Höhe")
+    entry_hoehe = ctk.CTkEntry(frame_add_project, placeholder_text="Höhe", width=300)
     entry_hoehe.pack(pady=5)
-    entry_nordwinkel = ctk.CTkEntry(frame_add_project, placeholder_text="Nordwinkel")
+    entry_nordwinkel = ctk.CTkEntry(frame_add_project, placeholder_text="Nordwinkel", width=300)
     entry_nordwinkel.pack(pady=5)
 
-    button_add_project = ctk.CTkButton(frame_add_project, text="Projekt hinzufügen", command=add_project)
-    button_add_project.pack(pady=5)
+    button_add_project = ctk.CTkButton(frame_add_project, text="Projekt hinzufügen", command=add_project, corner_radius=10)
+    button_add_project.pack(pady=10)
 
     project_window.mainloop()
 
@@ -159,16 +172,16 @@ def select_shortcut():
     shortcut_window.title("Shortcut auswählen")
     shortcut_window.geometry("400x300")
 
-    label_shortcuts = ctk.CTkLabel(shortcut_window, text="Wählen Sie einen AEP-Shortcut aus.", font=("Arial", 16))
-    label_shortcuts.pack(pady=10)
+    label_shortcuts = ctk.CTkLabel(shortcut_window, text="Wählen Sie einen AEP-Shortcut aus.", font=("Roboto", 16))
+    label_shortcuts.pack(pady=20)
 
-    shortcut_listbox = Listbox(shortcut_window)
+    shortcut_listbox = Listbox(shortcut_window, bg="#1E1E2E", fg="#FFFFFF", highlightbackground="#4CAF50", font=("Roboto", 12), width=40, height=5)
     for shortcut in shortcuts:
         shortcut_listbox.insert("end", shortcut)
-    shortcut_listbox.pack(pady=10)
+    shortcut_listbox.pack(pady=20)
 
-    button_select = ctk.CTkButton(shortcut_window, text="Weiter", command=on_select)
-    button_select.pack(pady=10)
+    button_select = ctk.CTkButton(shortcut_window, text="Weiter", command=on_select, corner_radius=10)
+    button_select.pack(pady=20)
 
     shortcut_window.mainloop()
 
@@ -182,7 +195,7 @@ def show_error(message):
 def show_analysis_instructions(project_name):
     instruction_window = ctk.CTk()
     instruction_window.title("Anweisungen")
-    instruction_window.geometry("400x300")
+    instruction_window.geometry("500x400")
 
     label_instructions = ctk.CTkLabel(
         instruction_window,
@@ -192,14 +205,14 @@ def show_analysis_instructions(project_name):
             "2. Öffnen Sie das Stützenwerkzeug und setzen Sie die Element-ID 'Baugespann'.\n"
             "3. Platzieren Sie die Stützen an den gewünschten Stellen."
         ),
-        font=("Arial", 14),
+        font=("Roboto", 16),
         justify="left",
-        wraplength=350
+        wraplength=450
     )
-    label_instructions.pack(pady=10)
+    label_instructions.pack(pady=20)
 
-    button_continue = ctk.CTkButton(instruction_window, text="Weiter", command=instruction_window.destroy)
-    button_continue.pack(pady=10)
+    button_continue = ctk.CTkButton(instruction_window, text="Weiter", command=instruction_window.destroy, corner_radius=10)
+    button_continue.pack(pady=20)
 
     instruction_window.mainloop()
 
