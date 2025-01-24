@@ -1,113 +1,102 @@
 import customtkinter as ctk
-import json
 from tkinter import messagebox, filedialog
+import json
 import os
 
 # Globale Variablen
-projects_file = "projects.json"
+output_directory = ""
 current_project = None
+projects_file = "projects.json"
 
-# Lade gespeicherte Projekte
-def load_projects():
-    if os.path.exists(projects_file):
-        with open(projects_file, "r") as file:
-            return json.load(file)
-    return {}
-
-# Speichere Projekte
+# Projekte speichern/laden
 def save_projects(projects):
     with open(projects_file, "w") as file:
-        json.dump(projects, file, indent=4)
+        json.dump(projects, file)
+
+def load_projects():
+    if not os.path.exists(projects_file):
+        return {}
+    with open(projects_file, "r") as file:
+        return json.load(file)
 
 def main_interface():
-    global current_project
+    global output_directory, current_project
     projects = load_projects()
 
-    def verify_license():
-        license_key = entry_license.get()
-        if license_key == "123456":
-            project_selection()
-        else:
-            messagebox.showerror("Ungültige Lizenz", "Bitte geben Sie eine gültige Lizenznummer ein.")
+    # Interface Logik
+    def show_projects():
+        for widget in root.winfo_children():
+            widget.destroy()
 
-    def project_selection():
-        nonlocal projects
-        root.destroy()
-        project_window = ctk.CTk()
-        project_window.title("Projekt auswählen")
+        # Projektliste anzeigen
+        for key, project in projects.items():
+            btn = ctk.CTkButton(root, text=project["Projekt"], command=lambda k=key: select_project(k))
+            btn.pack(pady=5)
 
-        def on_project_select():
-            nonlocal current_project
-            selected_project = project_listbox.get(project_listbox.curselection())
-            current_project = projects[selected_project]
-            project_window.destroy()
+        # Neues Projekt erfassen
+        new_project_btn = ctk.CTkButton(root, text="+ Neues Projekt erfassen", command=create_new_project)
+        new_project_btn.pack(pady=10)
 
-        def add_project():
-            def save_new_project():
-                new_project = {
-                    "name": entry_project_name.get(),
-                    "details": {
-                        "Parzelle": entry_parzelle.get(),
-                        "Adresse": entry_adresse.get(),
-                        "Büro": entry_buero.get(),
-                        "Büro-Adresse": entry_buero_adresse.get(),
-                        "Bauherrschaft": {
-                            "Name": entry_bauherr_name.get(),
-                            "Adresse": entry_bauherr_adresse.get(),
-                        },
-                    },
-                    "offsets": {
-                        "Ostausrichtung": float(entry_ost.get()),
-                        "Nordausrichtung": float(entry_nord.get()),
-                        "Höhe": float(entry_hoehe.get()),
-                        "Nordwinkel": float(entry_nordwinkel.get()),
-                    },
-                }
-                projects[new_project["name"]] = new_project
-                save_projects(projects)
-                add_project_window.destroy()
-                project_selection()
+    def select_project(key):
+        global current_project
+        current_project = projects[key]
 
-            add_project_window = ctk.CTkToplevel(project_window)
-            add_project_window.title("Neues Projekt erfassen")
-            
-            # GUI für Projekteingabe (Name, Details, Offsets)
-            entry_project_name = ctk.CTkEntry(add_project_window, placeholder_text="Projektname")
-            entry_parzelle = ctk.CTkEntry(add_project_window, placeholder_text="Parzelle")
-            entry_adresse = ctk.CTkEntry(add_project_window, placeholder_text="Adresse")
-            entry_buero = ctk.CTkEntry(add_project_window, placeholder_text="Büro")
-            entry_buero_adresse = ctk.CTkEntry(add_project_window, placeholder_text="Büro-Adresse")
-            entry_bauherr_name = ctk.CTkEntry(add_project_window, placeholder_text="Bauherrschaft Name")
-            entry_bauherr_adresse = ctk.CTkEntry(add_project_window, placeholder_text="Bauherrschaft Adresse")
-            entry_ost = ctk.CTkEntry(add_project_window, placeholder_text="Ostausrichtung")
-            entry_nord = ctk.CTkEntry(add_project_window, placeholder_text="Nordausrichtung")
-            entry_hoehe = ctk.CTkEntry(add_project_window, placeholder_text="Höhe")
-            entry_nordwinkel = ctk.CTkEntry(add_project_window, placeholder_text="Nordwinkel")
+        # Projektdetails anzeigen
+        show_project_details(key)
 
-            # Speichern-Button
-            button_save = ctk.CTkButton(add_project_window, text="Speichern", command=save_new_project)
-            button_save.pack()
+    def show_project_details(key):
+        for widget in root.winfo_children():
+            widget.destroy()
 
-        project_listbox = ctk.CTkListbox(project_window)
-        for project_name in projects.keys():
-            project_listbox.insert("end", project_name)
+        project = projects[key]
 
-        project_listbox.pack()
-        ctk.CTkButton(project_window, text="Projekt auswählen", command=on_project_select).pack()
-        ctk.CTkButton(project_window, text="Neues Projekt hinzufügen", command=add_project).pack()
-        project_window.mainloop()
+        for field, value in project.items():
+            label = ctk.CTkLabel(root, text=f"{field}: {value}")
+            label.pack()
 
-    # Login-Bildschirm
+        # Weiter- und Zurück-Buttons
+        ctk.CTkButton(root, text="Weiter", command=select_output_directory).pack(pady=10)
+        ctk.CTkButton(root, text="Zurück", command=show_projects).pack(pady=5)
+
+    def select_output_directory():
+        global output_directory
+        output_directory = filedialog.askdirectory(title="Zielverzeichnis wählen")
+        if output_directory:
+            root.destroy()
+
+    def create_new_project():
+        new_project_window = ctk.CTkToplevel()
+        new_project_window.title("Neues Projekt erfassen")
+
+        # Eingabefelder für Projektdaten
+        entries = {}
+        fields = ["Projekt", "Adresse", "Planummer", "Bauherrschaft", "Adresse_Bauherrschaft"]
+        for field in fields:
+            label = ctk.CTkLabel(new_project_window, text=field)
+            label.pack()
+            entry = ctk.CTkEntry(new_project_window)
+            entry.pack()
+            entries[field] = entry
+
+        def save_new_project():
+            key = entries["Projekt"].get()
+            projects[key] = {field: entry.get() for field, entry in entries.items()}
+            projects[key]["Georeferenzierung"] = {
+                "SURVEY_POINT_OFFSET_X": 0.0,
+                "SURVEY_POINT_OFFSET_Y": 0.0,
+                "SURVEY_POINT_OFFSET_Z": 0.0,
+                "SURVEY_NORDWINKELOFFSET": 0.0,
+            }
+            save_projects(projects)
+            new_project_window.destroy()
+            show_projects()
+
+        ctk.CTkButton(new_project_window, text="Speichern", command=save_new_project).pack()
+
     root = ctk.CTk()
     root.title("AEP-ArchicadEfficiencyProgramm")
-    label_title = ctk.CTkLabel(root, text="Bitte tragen Sie Ihre Lizenznummer ein")
-    label_title.pack()
-
-    entry_license = ctk.CTkEntry(root, placeholder_text="Lizenznummer")
-    entry_license.pack()
-
-    button_verify = ctk.CTkButton(root, text="Weiter", command=verify_license)
-    button_verify.pack()
-
+    root.geometry("600x400")
+    show_projects()
     root.mainloop()
-    return "123456", current_project
+
+    return current_project, output_directory

@@ -4,32 +4,29 @@ from V2.pdfGeneratorV2 import generate_pdf
 import os
 
 def main():
-    # Starte die Haupt-Benutzeroberfläche
-    license_key, current_project = main_interface()
+    # Öffne das Interface
+    project_data, output_dir = main_interface()
 
-    # Prüfe, ob ein Projekt ausgewählt wurde
-    if not current_project:
-        raise RuntimeError("Kein Projekt ausgewählt. Programm wird beendet.")
+    if not project_data or not output_dir:
+        raise RuntimeError("Keine Projektdaten oder Zielverzeichnis verfügbar.")
 
-    # Verbindung zu Archicad herstellen und Stützen analysieren
-    print(f"Starte Analyse für das Projekt: {current_project['name']}")
-    offsets = current_project["offsets"]
+    # Verbindung zu Archicad prüfen
     try:
-        data = analyze_stuetzen(offsets)
-    except RuntimeError as e:
-        raise RuntimeError(f"Fehler bei der Stützenanalyse: {e}")
+        print("Starte Stützenanalyse...")
+        data = analyze_stuetzen(project_data["Georeferenzierung"])
+        print("Stützenanalyse abgeschlossen.")
 
-    # Generiere PDF basierend auf den Analyseergebnissen
-    output_dir = os.path.join("outputs", current_project["name"])
-    os.makedirs(output_dir, exist_ok=True)
-    pdf_file = os.path.join(output_dir, "Stuetzen_Liste_Mit_Plankopf.pdf")
-    try:
-        generate_pdf(pdf_file, current_project, data)
+        # PDF-Generierung
+        print("Erstelle PDF...")
+        pdf_file = os.path.join(output_dir, "Ausmass_Baugespann.pdf")
+        generate_pdf(
+            output_file=pdf_file,
+            project_info=project_data,
+            data=data
+        )
         print(f"PDF erfolgreich erstellt: {pdf_file}")
-    except RuntimeError as e:
-        raise RuntimeError(f"Fehler beim Erstellen der PDF: {e}")
-
-    print("Programm erfolgreich abgeschlossen.")
+    except Exception as e:
+        print(f"Fehler: {e}")
 
 if __name__ == "__main__":
     main()
