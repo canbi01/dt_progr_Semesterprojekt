@@ -18,11 +18,18 @@ def save_projects(projects):
     with open(projects_file, "w") as file:
         json.dump(projects, file, indent=4)
 
+# Add "AEP" logo at the top right of each window
+def add_aep_logo(window):
+    logo_label = tk.Label(window, text="AEP", font=("Arial", 20, "bold"), fg="white")
+    logo_label.pack(side=tk.TOP, anchor=tk.NE, padx=10, pady=10)
+
 def start_license_verification():
     """Startet die Lizenzprüfung."""
     root = tk.Tk()
     root.title("Lizenzprüfung")
     root.geometry("400x200")
+
+    add_aep_logo(root)
 
     license_key_var = tk.StringVar()
 
@@ -44,6 +51,8 @@ def select_project_interface():
     root = tk.Tk()
     root.title("AEP - Archicad Efficiency Program")
     root.geometry("800x600")
+
+    add_aep_logo(root)
 
     projects = load_projects()
     selected_project = tk.StringVar()
@@ -151,9 +160,6 @@ def select_project_interface():
     btn_new_project = tk.Button(frame_left, text="Neues Projekt", command=create_new_project)
     btn_new_project.pack(pady=10)
 
-    btn_delete_project = tk.Button(frame_left, text="Projekt löschen", command=delete_selected_project)
-    btn_delete_project.pack(pady=10)
-
     # Right-side project details
     frame_right = tk.Frame(root, padx=10, pady=10)
     frame_right.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
@@ -200,13 +206,23 @@ def select_project_interface():
 
     root.mainloop()
 
+<<<<<<< HEAD
     return projects.get(selected_project.get(), None)
+=======
+    return {"name": current_project, "details": projects.get(current_project, {}).get("details", {})}
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 
 def select_shortcut():
     """Zeigt ein Fenster zur Auswahl eines Shortcuts."""
     root = tk.Tk()
     root.title("Shortcut auswählen")
+<<<<<<< HEAD
     root.geometry("400x300")
+=======
+    root.geometry("400x600")
+
+    add_aep_logo(root)
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 
     selected_shortcut = tk.StringVar(value="")
 
@@ -230,6 +246,7 @@ def select_shortcut():
     root.mainloop()
     return selected_shortcut.get()
 
+<<<<<<< HEAD
 def show_error(message):
     """Zeigt eine Fehlermeldung in einem Popup-Fenster an."""
     messagebox.showerror("Fehler", message)
@@ -238,12 +255,19 @@ def select_output_directory():
     """Startet die Auswahl eines Zielverzeichnisses."""
     return filedialog.askdirectory(title="Zielverzeichnis wählen")
 
+=======
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
 def show_analysis_instructions(project_name):
     """Zeigt Anweisungen zur Analyse an."""
     root = tk.Tk()
     root.title("Anweisungen")
     root.geometry("400x300")
 
+<<<<<<< HEAD
+=======
+    add_aep_logo(root)
+
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
     instructions = (
         f"Öffnen Sie die Archicad-Datei für Projekt {project_name} und folgen Sie diesen Anweisungen:\n\n"
         "1. Navigieren Sie ins 3D-Fenster.\n"
@@ -255,4 +279,12 @@ def show_analysis_instructions(project_name):
 
     tk.Button(root, text="Weiter", command=root.destroy).pack(pady=10)
 
+<<<<<<< HEAD
     root.mainloop()
+=======
+    root.mainloop()
+
+def select_output_directory():
+    """Startet die Auswahl eines Zielverzeichnisses."""
+    return filedialog.askdirectory(title="Zielverzeichnis wählen")
+>>>>>>> parent of 81c6503 (löschfunktion eingebaut)
