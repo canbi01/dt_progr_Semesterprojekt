@@ -18,11 +18,18 @@ def save_projects(projects):
     with open(projects_file, "w") as file:
         json.dump(projects, file, indent=4)
 
+# Add "AEP" logo at the top right of each window
+def add_aep_logo(window):
+    logo_label = tk.Label(window, text="AEP", font=("Arial", 20, "bold"), fg="white")
+    logo_label.pack(side=tk.TOP, anchor=tk.NE, padx=10, pady=10)
+
 def start_license_verification():
     """Startet die Lizenzprüfung."""
     root = tk.Tk()
     root.title("Lizenzprüfung")
     root.geometry("400x200")
+
+    add_aep_logo(root)
 
     license_key_var = tk.StringVar()
 
@@ -44,6 +51,8 @@ def select_project_interface():
     root = tk.Tk()
     root.title("AEP - Archicad Efficiency Program")
     root.geometry("800x600")
+
+    add_aep_logo(root)
 
     projects = load_projects()
     selected_project = tk.StringVar()
@@ -179,7 +188,9 @@ def select_shortcut():
     """Zeigt ein Fenster zur Auswahl eines Shortcuts."""
     root = tk.Tk()
     root.title("Shortcut auswählen")
-    root.geometry("400x300")
+    root.geometry("400x600")
+
+    add_aep_logo(root)
 
     selected_shortcut = tk.StringVar(value="")
 
@@ -208,6 +219,8 @@ def show_analysis_instructions(project_name):
     root = tk.Tk()
     root.title("Anweisungen")
     root.geometry("400x300")
+
+    add_aep_logo(root)
 
     instructions = (
         f"Öffnen Sie die Archicad-Datei für Projekt {project_name} und folgen Sie diesen Anweisungen:\n\n"
